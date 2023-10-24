@@ -193,12 +193,12 @@
                     <td><span style="width:100px;display:block">  {{elem.created_at}}</span></td>
                     <td @click="handleChange(elem,'lokal')">
                         <span v-if="!elem.editable"> {{elem.lokal}}</span>
-                        <input :id="elem.id+'lokal'" v-else type="text" v-model="elem.lokal" @change="updateAuto(elem,'lokal')" style="width:90%" @blur.stop="elem.editable = false">
+                        <input @keyup.enter="elem.editable = false" :id="elem.id+'lokal'" v-else type="text" v-model="elem.lokal" @change="updateAuto(elem,'lokal')" style="width:90%" @blur.stop="elem.editable = false">
                     </td>
 
                     <td @click="handleChange(elem,'adres_admin')">
                         <span v-if="!elem.editable"> {{elem.adres_admin}}</span>
-                        <input :id="elem.id+'adres_admin'"  v-else type="text" v-model="elem.adres_admin" @change="updateAuto(elem,'adres_admin')" @blur.stop="elem.editable = false">
+                        <input @keyup.enter="elem.editable = false" :id="elem.id+'adres_admin'"  v-else type="text" v-model="elem.adres_admin" @change="updateAuto(elem,'adres_admin')" @blur.stop="elem.editable = false">
                     </td>
 
                     <td @click="handleChange(elem,'nr_admin')" >
@@ -230,11 +230,11 @@
                     </td>
                     <td @click="handleChange(elem,'opis_niezgodnosci')">
                         <span v-if="!elem.editable"> {{elem.opis_niezgodnosci}}</span>
-                        <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false"></textarea>
+                        <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
                     </td>
                     <td @click="handleChange(elem,'uwagi_inwestora')" class="clientside">
                         <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
-                        <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')">
+                        <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
                     </td>
 
                     <td  @click="handleChange(elem,'status')" >
@@ -254,7 +254,7 @@
 
                     <td @click="handleChange(elem,'komentarz_serwisu')" >
                         <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
-                        <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%"></textarea>
+                        <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
                     </td>
                     <td @click="handleChange(elem,'SPW')">
                         <span v-if="!elem.editable"> {{elem.SPW}}</span>
