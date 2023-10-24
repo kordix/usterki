@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/mybootstrap.css">
 
+    <meta name="robots" content="noindex">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
@@ -25,22 +27,22 @@
     </p>
 
     <div id="navbar">
-        <a href="/"><img src="left.png" alt="" style="height:24px;margin-left:20px"></a>
+        <a href="/"><i style="color:black" class="bi bi-arrow-left"></i></a>
         <span>{{project.nazwa_projektu}} {{project.adres}} </span>
         <span></span>
     </div>
 
-    <div id="navbar2">
+    <!-- <div id="navbar2">
 
-        <div :class="{'active':activesection == 'usterki'}" @click="activesection = 'usterki'">USTERKI/ZADANIA</div>
-        <!-- <div :class="{'active':activesection == 'plany'}" @click="setPlany" >PLANY</div> -->
+        <div :class="{'active':activesection == 'usterki'}" @click="activesection = 'usterki'">USTERKI</div>
+        <div :class="{'active':activesection == 'plany'}" @click="setPlany" >PLANY</div>
         <div></div>
         <div></div>
         <div></div>
-        <!-- <div :class="{'active':activesection == 'raporty'}" @click="activesection = 'raporty'"> RAPORTY</div> -->
-        <!-- <div :class="{'active':activesection == 'ustawienia'}" @click="activesection = 'ustawienia'">Ustawienia</div> -->
+        <div :class="{'active':activesection == 'raporty'}" @click="activesection = 'raporty'"> RAPORTY</div>
+        <div :class="{'active':activesection == 'ustawienia'}" @click="activesection = 'ustawienia'">Ustawienia</div>
 
-    </div>
+    </div> -->
 
     <div v-show="activesection == 'usterki'">
 
@@ -211,7 +213,7 @@
 
                     <td @click="handleChange(elem,'data_klient')">
                         <span v-if="!elem.editable"> {{elem.data_klient}}</span>
-                        <input v-else :id="elem.id+'data_klient'" type="date" v-model="elem.data_klient" @change="updateAuto(elem,'data_klient')" @blur.stop="elem.editable = false">
+                        <input v-else :id="elem.id+'data_klient'" type="date" v-model="elem.data_klient" @blur.stop="updateAuto(elem,'data_klient')">
                     </td>
                     <td @click="handleChange(elem,'typ_niezgodnosci')">
                         <span v-if="!elem.editable">{{elem.typ_niezgodnosci}}</span>

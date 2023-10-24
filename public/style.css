@@ -1,4 +1,4 @@
-@import url('https://fonts.cdnfonts.com/css/oswald-4');
+/* @import url('https://fonts.cdnfonts.com/css/oswald-4'); */
 
 .highlight>td {
     background: yellow
@@ -26,15 +26,15 @@ td {
 }
 
 #navbar {
-    background-color: rgb(64, 64, 64);
+    /* background-color: white; */
     border-bottom-color: rgb(167, 167, 170);
     border-bottom-width: 1px;
     box-shadow: rgb(167, 167, 170) 0px 0px 0px;
     height: 64px;
     display: flex;
     justify-content: space-between;
-    color: white;
-    font-family: Oswald;
+    color: black    ;
+    font-family: Sans-serif;
     font-weight: bold;
     line-height: 64px;
     align-items: center;
@@ -43,7 +43,7 @@ td {
 #navbar2 {
     display: flex;
     justify-content: space-between;
-    font-family: Oswald;
+    font-family: Arial;
     height: 54px;
     border-bottom: 3px #FFC107 solid !important;
 }
