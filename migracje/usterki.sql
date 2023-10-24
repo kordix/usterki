@@ -1,0 +1,28 @@
+CREATE TABLE usterki (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    typ_niezgodnosci varchar(255) default '',
+    opis_niezgodnosci text default '',
+    adres_admin text default '',
+    nr_admin varchar(255),
+    kontakt_klient varchar(255),
+    data_klient varchar(255),
+    uwagi_inwestora text default '',
+
+    termin_zgloszenia varchar(255) default '',
+    klasyfikacja varchar(255) default '',
+    komentarz_serwisu text default '',
+    `status` varchar(255) default '',
+    komentarz_budowy text default '',
+    `lokal` varchar(255) default '',
+    `odbiorca` varchar(255) default '',
+    project_id int default null,
+    plan_id int default null,
+    x float default null,
+    y float default NULL,
+    SPW varchar(255) default '',
+    nr_oferty varchar(255) default '',
+    nr_zlecenia varchar(255) default '',
+    created_at timestamp null,
+    updated_at timestamp NULL,
+    INDEX idx_project_id(project_id)
+)

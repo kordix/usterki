@@ -1,0 +1,161 @@
+@import url('https://fonts.cdnfonts.com/css/oswald-4');
+
+.highlight>td {
+    background: yellow
+}
+
+td {
+    padding: 4px;
+}
+
+#addform {
+    margin-top: 10px;
+}
+
+#addform label {
+    display: inline-block;
+    width: 150px;
+}
+
+#addform label:after {
+    content: ':';
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+#navbar {
+    background-color: rgb(64, 64, 64);
+    border-bottom-color: rgb(167, 167, 170);
+    border-bottom-width: 1px;
+    box-shadow: rgb(167, 167, 170) 0px 0px 0px;
+    height: 64px;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-family: Oswald;
+    font-weight: bold;
+    line-height: 64px;
+    align-items: center;
+}
+
+#navbar2 {
+    display: flex;
+    justify-content: space-between;
+    font-family: Oswald;
+    height: 54px;
+    border-bottom: 3px #FFC107 solid !important;
+}
+
+#navbar2>div {
+    display: flex;
+    justify-content: center;
+    background: #E1E1E1;
+    color: black;
+    align-items: center;
+    font-weight: bold;
+
+    width: 25%;
+
+}
+
+table {
+    /* width: 100%; */
+    border-spacing: 0px;
+    font-size:12px;
+}
+
+td , th{
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray lightgray black;
+    border-image: initial;
+    border-spacing: 0px;
+    background: white;
+    color: black;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+.green{
+    background:lightgreen
+}
+
+th{
+ 
+}
+
+#navbar2 > .active {
+    background: orange
+}
+
+#navbar2> div {
+    cursor: pointer;
+}
+
+#navbar2>div:hover {
+    opacity:0.7 ;
+}
+
+.wykonana > td{
+    background:lightgreen;
+}
+
+
+ .point {
+     position: absolute;
+     transform: translate(-50%, -50%);
+     width: 30px;
+
+     height: 30px;
+     border: 1px black solid;
+     border-radius: 100%;
+     background: blue;
+     z-index:1000;
+ }
+
+ #image{
+    width:800px;
+    /* height:400px; */
+ }
+
+ #image-container {
+     width: 800px;
+     height: 600px;
+     border: 1px solid #000;
+     overflow: hidden;
+     background-image: url('alvarium_B_p2.png');
+     /* Zastąp 'your-image.jpg' adresem URL obrazka */
+     background-size: cover;
+     background-position: center;
+     background-repeat:no-repeat;
+ }
+
+ #content {
+     transform-origin: center;
+ }
+
+ .filtry > th {
+    background:#eee;
+    height:20px;
+ }
+
+ .addrow > td {
+    background:rgb(186, 229, 186);
+ }
+
+ .clientside {
+    border-right:2px black solid;
+ }
+
+ table input {
+    width:90%;
+ }
+
+ table th {
+    text-align:center;
+ }
+
+ .typusterkiselect{
+    width:100px;
+ }

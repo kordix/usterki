@@ -1,0 +1,29 @@
+.lightbox {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    display: grid;
+    place-items: center;
+    transition: opacity 0.5s ease;
+    overflow: scroll;
+}
+
+.lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#lightbox img {
+    max-width: 90%;
+    max-height: 70%;
+}
+
+
+#gallerynextbutton {
+    position: absolute;
+    bottom: 100px;
+    z-index: 1001;
+}
