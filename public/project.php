@@ -14,6 +14,7 @@ if(!isset($_SESSION['zalogowany'])) {
 <html lang="en">
 
 <head>
+    <link rel="icon" href="data:;base64,=">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>localhost:8003</title>

@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Zrzucanie danych dla tabeli serwis.users: ~0 rows (około)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 REPLACE INTO `users` (`id`, `login`, `password`, `group`) VALUES
-	(1, 'admin', 'a2089b9e24810440dbde1deccda565ea', '');
+	(1, 'admin', '$2y$10$qN6UQsJXjT04OKR7Pp436eJDyDzW2d6eYE2oF.XkR8OEW9T1iT/0a', 'admin');
