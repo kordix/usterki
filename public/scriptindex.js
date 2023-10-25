@@ -1,6 +1,7 @@
 Vue.createApp({
     data() {
         return {
+            user:{},
             projekty:[],
             activeproject: null,
             messages: [],
@@ -13,9 +14,10 @@ Vue.createApp({
             }
         }
     },
-    mounted() {
+    async mounted() {
         let self = this;
         axios.get('api/projects.php').then((res) => self.projekty = res.data);
+        await axios.get('api/getuser.php').then((res) => self.user = res.data);
 
        
 

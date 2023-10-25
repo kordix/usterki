@@ -38,12 +38,12 @@ if(!isset($_SESSION['zalogowany'])) {
         <?php echo $_GET['id'] ?>
     </p>
 
-    <input value="<?php echo $_SESSION['id']; ?>" id="userid">
+    <input type="hidden" value="<?php echo $_SESSION['id']; ?>" id="userid">
 
     <div id="navbar">
         <a href="/"><i style="color:black" class="bi bi-arrow-left"></i></a>
         <span>{{project.nazwa_projektu}} {{project.adres}} </span>
-        <span></span>
+        <span>Zalogowany: {{user.login}} <a href="./api/logout.php"> <button>Wyloguj</button></a> &nbsp; &nbsp; &nbsp;</span>
     </div>
 
     <!-- <div id="navbar2">
@@ -59,9 +59,6 @@ if(!isset($_SESSION['zalogowany'])) {
     </div> -->
 
     <div v-show="activesection == 'usterki'">
-
-        {{user}}
-
         <div>
             <br>
             <table id="usterkitable">

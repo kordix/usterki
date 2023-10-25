@@ -5,6 +5,9 @@ $id = $_GET['id'];
 $query = "select * from projects where id = ?";
 
 
+header('Location: /login.php');
+
+
 
 $sth = $dbh->prepare($query);
 $sth->execute([$id]);

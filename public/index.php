@@ -1,3 +1,13 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION['zalogowany'])) {
+    header('Location: /login.php');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +30,7 @@
 <body>
 
     <div id="app" class="container">
+        <div v-if="user"><span>Zalogowany: {{user.login}} <a href="./api/logout.php"> <button>Wyloguj</button></a> &nbsp; &nbsp; &nbsp;</span></div>
         <button @click="deleteproject" v-if="activeproject">Usuń projekt</button>
 
         <div style="display:flex">
