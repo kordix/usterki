@@ -1,4 +1,14 @@
 <?php
+
+
+session_start();
+
+if(!isset($_SESSION['zalogowany'])) {
+    echo 'NIEZALOGOWANY';
+    return;
+}
+
+
 if($_SERVER['REQUEST_METHOD'] != 'POST') return;
 
 

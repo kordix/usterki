@@ -58,6 +58,11 @@ Vue.createApp({
             },150)
         },
         handleChange(elem, kolumna) {
+            if(this.user.group == 'klient'){
+                if (['status', 'komentarz_serwisu', 'SPW','termin_zgloszenia','klasyfikacja'].indexOf(kolumna) > -1 ){
+                    return
+                }
+            }
             elem.editable = true;
             console.log(elem.id + kolumna);
             setTimeout(() => {
@@ -228,6 +233,11 @@ Vue.createApp({
             if (this.filtry.lokal) {
                 filtered = filtered.filter((el) => el.lokal.toLowerCase().indexOf(self.filtry.lokal) > -1)
             }
+
+            if (this.filtry.status) {
+                filtered = filtered.filter((el) => el.status.toLowerCase().indexOf(self.filtry.status.toLowerCase()) > -1)
+            }
+
 
 
 

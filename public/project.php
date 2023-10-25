@@ -42,7 +42,7 @@ if(!isset($_SESSION['zalogowany'])) {
     <input type="hidden" value="<?php echo $_SESSION['id']; ?>" id="userid">
 
     <div id="navbar">
-        <a href="/"><i style="color:black" class="bi bi-arrow-left"></i></a>
+        <a href="/"><i><-</i></a>
         <span>{{project.nazwa_projektu}} {{project.adres}} </span>
         <span>Zalogowany: {{user.login}} <a href="./api/logout.php"> <button>Wyloguj</button></a> &nbsp; &nbsp; &nbsp;</span>
     </div>

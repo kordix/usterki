@@ -1,12 +1,10 @@
 <?php
-//session_start();
 
-echo 'FAFDSSFFSFDSA';
+session_start();
 
-//if($_SERVER['REQUEST_METHOD'] != 'POST') return;
-
-if (!isset($_SESSION['zalogowany'])) {
-    //return;
+if(!isset($_SESSION['zalogowany'])) {
+    echo 'NIEZALOGOWANY';
+    return;
 }
 
 require_once('../db.php');
