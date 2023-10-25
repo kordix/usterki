@@ -15,7 +15,10 @@ Vue.createApp({
     },
     mounted() {
         let self = this;
-        axios.get('api/projects.php').then((res) => self.projekty = res.data)
+        axios.get('api/projects.php').then((res) => self.projekty = res.data);
+
+       
+
     },
     methods:{
         test(){

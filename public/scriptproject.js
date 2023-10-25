@@ -3,6 +3,7 @@ let map;
 Vue.createApp({
     data() {
         return {
+            user:{},
             sortkey: null,
             filtry: {
                 id: null,
@@ -44,9 +45,9 @@ Vue.createApp({
         const id = document.querySelector('#projectid').innerHTML;
         await axios.get('api/project.php?id=' + id).then((res) => self.project = res.data[0]);
         await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
-        // this.generateMap();
+        await axios.get('api/getuser.php').then((res) => self.user = res.data);
 
-        // this.generateMap();
+        
     },
     methods: {
         setPlany(){

@@ -159,3 +159,7 @@ th{
  .typusterkiselect{
     width:100px;
  }
+
+ .disabledcursor {
+    cursor: not-allowed;
+ }

@@ -1,3 +1,15 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION['zalogowany'])) {
+    header('Location: /login.php');
+}
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,6 +38,8 @@
         <?php echo $_GET['id'] ?>
     </p>
 
+    <input value="<?php echo $_SESSION['id']; ?>" id="userid">
+
     <div id="navbar">
         <a href="/"><i style="color:black" class="bi bi-arrow-left"></i></a>
         <span>{{project.nazwa_projektu}} {{project.adres}} </span>
@@ -46,7 +60,7 @@
 
     <div v-show="activesection == 'usterki'">
 
-     
+        {{user}}
 
         <div>
             <br>
@@ -237,9 +251,9 @@
                         <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
                     </td>
 
-                    <td  @click="handleChange(elem,'status')" >
+                    <td  @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable">{{elem.status}}</span>
-                        <select name="" :id="elem.id+'status'"  v-model="elem.status"
+                        <select name="" :id="elem.id+'status'"  v-model="elem.status" :disabled="user.group == 'klient'"
                             @change="updateAuto(elem,'status')" style="width:95%" v-if="elem.editable">
                             <option value="Zgłoszona">Zgłoszona</option>
                             <option value="Wykonana">Wykonana</option>
@@ -252,17 +266,17 @@
 
                     </td>
 
-                    <td @click="handleChange(elem,'komentarz_serwisu')" >
+                    <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
-                        <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
+                        <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
                     </td>
-                    <td @click="handleChange(elem,'SPW')">
+                    <td @click="handleChange(elem,'SPW')" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable"> {{elem.SPW}}</span>
                         <input :id="elem.id+'SPW'" v-else  v-model="elem.SPW" @change="updateAuto(elem,'SPW')" @blur="elem.editable = false">
                     </td>
-                    <td @click="handleChange(elem,'termin_zgloszenia')">
+                    <td @click="handleChange(elem,'termin_zgloszenia')" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable"> {{elem.termin_zgloszenia}}</span>
-                        <select v-else name="" :id="elem.id+'termin_zgloszenia'" v-model="elem.termin_zgloszenia" @change="updateAuto(elem,'termin_zgloszenia')" style="width:95%" @blur="elem.editable = false">
+                        <select v-else name="" :id="elem.id+'termin_zgloszenia'" :disabled="user.group == 'klient'" v-model="elem.termin_zgloszenia" @change="updateAuto(elem,'termin_zgloszenia')" style="width:95%" @blur="elem.editable = false">
                             <option value="Pomontażowa">Pomontażowa</option>
                             <option value="Odbiorowa">Odbiorowa</option>
                             <option value="Lokatorska">Lokatorska</option>
@@ -278,10 +292,10 @@
                         <span v-if="!elem.editable" >{{elem.y}}</span>
                         <input v-else type="text" v-model="elem.y" @change="updateAuto(elem,'y')" style="width:20px" placeholder="y">
                     </td> -->
-                    <td @click="elem.editable = true">
+                    <td @click="elem.editable = true" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable">{{elem.klasyfikacja}}</span>
                         <select name="" id="" v-model="elem.klasyfikacja"
-                            @change="updateAuto(elem,'klasyfikacja')" style="width:95%" v-if="elem.editable">
+                            @change="updateAuto(elem,'klasyfikacja')" style="width:95%" v-if="elem.editable" :disabled="user.group == 'klient'">
                             <option value="Gwarancyjna">Gwarancyjna</option>
                             <option value="W normie">W normie</option>
                             <option value="Odpłatna">Odpłatna</option>
@@ -336,7 +350,7 @@
                         <textarea v-model="form.uwagi_inwestora" style="width:150px"></textarea>
                     </td>
                     <td>
-                        <select name="" id="" v-model="form.status">
+                        <select name="" id="" v-model="form.status" disabled>
                             <option value="Zgłoszona">Zgłoszona</option>
                             <option value="Wykonana">Wykonana</option>
                             <option value="Zatwierdzona">Zatwierdzona</option>
@@ -346,10 +360,10 @@
                         </select>
                     </td>
                     <td>
-                        <textarea style="width:200px"  v-model="form.komentarz_serwisu"></textarea>
+                        <textarea style="width:200px"  v-model="form.komentarz_serwisu" :disabled="user.group == 'klient'">></textarea>
                     </td>
                     <td>
-                        <input  v-model="form.SPW" style="width:100px">
+                        <input  v-model="form.SPW" style="width:100px" :disabled="user.group == 'klient'">
                     </td>
                     <td>
                         <select name="" id="" v-model="form.termin_zgloszenia" disabled>
@@ -365,7 +379,7 @@
                         <input  v-model="form.y">
                     </td> -->
                     <td>
-                        <select name="" id="" v-model="form.klasyfikacja">
+                        <select name="" id="" v-model="form.klasyfikacja" :disabled="user.group == 'klient'">>
                             <option value="Gwarancyjna">Gwarancyjna</option>
                             <option value="W normie">W normie</option>
                             <option value="Odpłatna">Odpłatna</option>
