@@ -84,7 +84,7 @@ if(!isset($_SESSION['zalogowany'])) {
 
         <br><br>
 
-        <button class="btn btn-primary" @click="formbool = !formbool">+ dodaj projekt</button>
+        <button class="btn btn-primary" @click="formbool = !formbool" v-if="user.group =='admin'">+ dodaj projekt</button>
 
         <div id="addform" v-if="formbool">
             <div class="form-group">
