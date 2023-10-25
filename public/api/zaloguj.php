@@ -28,6 +28,8 @@ if(count($rows) > 0) {
     if (password_verify($dane->password, $rows[0]['password'])) {
         $_SESSION['zalogowany'] = true;
         $_SESSION['id'] = $rows[0]['id'];
+        $_SESSION['group'] = $rows[0]['group'];
+
         echo 'ZALOGOWANY';
         //header('Location: /');
     } else {

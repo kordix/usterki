@@ -14,26 +14,29 @@ if(!isset($_SESSION['zalogowany'])) {
 }
 
 require('../cred.php');
-$dbh = new PDO("mysql:host=$hostname;dbname=$dbname;charset=UTF8", $user, $pass);
+if($_SESSION['group'] == 'klient') {
+    $dbh = new PDO("mysql:host=$hostname;dbname=$dbname;charset=UTF8", $user, $pass);
 
-$id = $_SESSION['id'];
-$projectid = $_GET['id'];
+    $id = $_SESSION['id'];
+    $projectid = $_GET['id'];
 
-$query = "select distinct p.* from projects p
-join rights r on p.id = r.project_id
-where r.user_id = $id and r.project_id = ?
-";
+    $query = "select distinct p.* from projects p
+    join rights r on p.id = r.project_id
+    where r.user_id = $id and r.project_id = ?
+    ";
 
-$sth = $dbh->prepare($query);
-$sth->execute([$projectid]);
+    $sth = $dbh->prepare($query);
+    $sth->execute([$projectid]);
 
-$rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-if(count($rows)){
-    
-}else{
-    echo 'NIE MASZ UPRAWNIENIA DO TEGO PROJEKTU';
-    return;
+    if(count($rows)) {
+
+    } else {
+        echo 'NIE MASZ UPRAWNIENIA DO TEGO PROJEKTU';
+        return;
+    }
+
 }
 
 ?>
