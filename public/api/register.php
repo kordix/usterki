@@ -21,7 +21,7 @@ $password = password_hash($dane->password , PASSWORD_DEFAULT);
 
 
 
-$query = "INSERT INTO users (login,password) VALUES (?,?);";
+$query = "INSERT INTO users (login,password,group) VALUES (?,?,'klient');";
 
 
 

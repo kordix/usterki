@@ -1,6 +1,7 @@
 Vue.createApp({
     data() {
         return {
+            useradd:'',
             user:{},
             projekty:[],
             activeproject: null,
@@ -11,13 +12,19 @@ Vue.createApp({
             form:{
                 nazwa_projektu:'',
                 adres:''
-            }
+            },
+            rights:[],
+            users:[]
         }
     },
     async mounted() {
         let self = this;
         axios.get('api/projects.php').then((res) => self.projekty = res.data);
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
+        await axios.get('api/rights.php').then((res) => self.rights = res.data);
+        await axios.get('api/users.php').then((res) => self.users = res.data);
+
+
 
        
 
@@ -34,6 +41,11 @@ Vue.createApp({
         },
         preview(){
             
+        },
+        addright(){
+            axios.get('api/rightadd.php?userid='+this.useradd+'&projectid='+this.activeproject).then((res)=>{
+                location.reload()
+            })
         }
 
     },

@@ -15,7 +15,7 @@ $login = $dane->login;
 $password = $dane->password;
 
 //REPLACE
-$query_run = $dbh->prepare("SELECT id,`password` FROM users where login = ?");
+$query_run = $dbh->prepare("SELECT * FROM users where login = ?");
 $query_run->execute([$login]);
 
 $rows = $query_run->fetchAll(PDO::FETCH_ASSOC);

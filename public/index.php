@@ -43,6 +43,8 @@ if(!isset($_SESSION['zalogowany'])) {
                             <td>id</td>
                             <td>Nazwa projektu</td>
                             <td>Adres</td>
+                            <td v-if="user.group == 'admin'">Użytkownicy</td>
+       
                             <td>Data </td>
                         </tr>
                         <tr v-for="elem in projekty" style="cursor:pointer" @click="activeproject = elem.id"
@@ -50,10 +52,25 @@ if(!isset($_SESSION['zalogowany'])) {
                             <td>#{{elem.id}}</td>
                             <td>{{elem.nazwa_projektu}}</td>
                             <td>{{elem.adres}}</td>
+                            <td v-if="user.group == 'admin'">
+                                <span v-for="el in rights.filter((el)=>el.project_id == elem.id)">{{el.login}} &nbsp;</span>    
+                            </td>
+                   
                             <td>{{elem.created_at}}</td>
+                       
                             <td><a :href="'project.php?id='+elem.id"> <button @click="preview(elem.id)">Wejdź</button></a></td>
                         </tr>
                     </table>
+
+                    <br><br>
+                    <div v-if="activeproject">
+                        <p>Dodaj użytkownika</p>
+                        <select name="" id="" v-model="useradd">
+                            <option value=""></option>
+                            <option :value="u.id" v-for="u in users">{{u.login}}</option>
+                        </select>
+                        <button v-if="useradd" @click="addright">ok</button>
+                    </div>
                 </div>
             </div>
 
@@ -82,7 +99,7 @@ if(!isset($_SESSION['zalogowany'])) {
 
             <button @click="save">Zapisz </button>
 
-        </div>
+        </div>  
     </div>
 
 

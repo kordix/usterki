@@ -10,18 +10,8 @@ if(!isset($_SESSION['zalogowany'])) {
 
 
 require('../db.php');
-
-$id = $_SESSION['id'];
-
-$query = "select * from projects";
-if($_SESSION['group'] == 'klient') {
-    $query = "select distinct p.* from projects p
-    join rights r on p.id = r.project_id
-    where r.user_id = $id
-    ";
-}
-
-
+$query = "select r.*,u.login from rights r
+join users u on u.id = r.user_id";
 
 $sth = $dbh->prepare($query);
 $sth->execute();
