@@ -69,7 +69,7 @@ if(!isset($_SESSION['zalogowany'])) {
                             <option value=""></option>
                             <option :value="u.id" v-for="u in users">{{u.login}}</option>
                         </select>
-                        <button v-if="useradd" @click="addright">ok</button>
+                        <button v-if="useradd" @click="addright" class="btn btn-secondary">Dodaj</button>
                     </div>
                 </div>
             </div>

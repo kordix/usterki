@@ -157,7 +157,7 @@ Vue.createApp({
             let self = this;
             const id = document.querySelector('#projectid').innerHTML;
             this.form.project_id = id;
-            axios.post('api/usterkaadd.php', this.form).then((res) => location.reload())
+            axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'))
         },
         update(id) {
             let self = this;

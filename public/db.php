@@ -22,5 +22,5 @@ try {
     //  echo "Connection error: " . $exception->getMessage();
 }
 
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+// $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
