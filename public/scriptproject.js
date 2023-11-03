@@ -3,7 +3,7 @@ let map;
 Vue.createApp({
     data() {
         return {
-            user:{},
+            user: {},
             sortkey: null,
             filtry: {
                 id: null,
@@ -35,7 +35,7 @@ Vue.createApp({
                 opis_niezgodnosci: '',
                 adres: '',
                 status: 'Zgłoszona',
-                termin_zgloszenia:'Lokatorska'
+                termin_zgloszenia: 'Lokatorska'
             },
             crudmode: 'add'
         }
@@ -47,26 +47,28 @@ Vue.createApp({
         await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
 
-        
+
     },
     methods: {
-        setPlany(){
+        setPlany() {
             let self = this;
             this.activesection = 'plany';
-            setTimeout(()=>{
+            setTimeout(() => {
                 self.generateMap();
-            },150)
+            }, 150)
         },
         handleChange(elem, kolumna) {
-            if(this.user.group == 'klient'){
-                if (['status', 'komentarz_serwisu', 'SPW','termin_zgloszenia','klasyfikacja'].indexOf(kolumna) > -1 ){
+            if (this.user.group == 'klient') {
+                if (['status', 'komentarz_serwisu', 'SPW', 'termin_zgloszenia', 'klasyfikacja'].indexOf(kolumna) > -1) {
                     return
                 }
             }
             elem.editable = true;
             console.log(elem.id + kolumna);
             setTimeout(() => {
-                document.getElementById(elem.id + kolumna).focus();
+                if (document.getElementById(elem.id + kolumna)) {
+                    document.getElementById(elem.id + kolumna).focus();
+                }
             }, 100);
 
         },
@@ -153,11 +155,12 @@ Vue.createApp({
         test() {
             console.log('test');
         },
-        save() {
+        async save() {
             let self = this;
             const id = document.querySelector('#projectid').innerHTML;
             this.form.project_id = id;
-            axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'))
+            await axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'));
+            location.reload();
         },
         update(id) {
             let self = this;
@@ -226,7 +229,7 @@ Vue.createApp({
                 }
             }
 
-            if(this.filtry.klasyfikacja){
+            if (this.filtry.klasyfikacja) {
                 filtered = filtered.filter((el) => el.klasyfikacja.toLowerCase().indexOf(self.filtry.klasyfikacja) > -1)
             }
 

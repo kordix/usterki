@@ -117,10 +117,13 @@ if($_SESSION['group'] == 'klient') {
                     <th>
                         <b>Usterka</b>
                     </th>
-                    <th class="clientside">
+                    <th >
                         <b>Uwagi inwestora</b>
                     </th>
-                     <th>
+                    <th class="clientside">
+
+                    </th>
+                    <th>
                         <b>Status</b>
                     </th>
                     <th style="width:300px">
@@ -142,6 +145,9 @@ if($_SESSION['group'] == 'klient') {
                     </th> -->
                     <th>
                         <span style="opacity:0.8">Klasyfikacja</span>
+                    </th>
+                    <th>
+                        ostatnia akcja
                     </th>
 
 
@@ -185,8 +191,11 @@ if($_SESSION['group'] == 'klient') {
                     <th>
                         <input type="text" v-model="filtry.opis_niezgodnosci" style="width:95%">
                     </th>
-                    <th class="clientside">
+                    <th >
                         <input type="text" v-model="filtry.uwagi_inwestora" style="width:95%">
+                    </th>
+                    <th class="clientside">
+
                     </th>
                     <th>
                         <select name="" id="" v-model="filtry.status" >
@@ -228,6 +237,7 @@ if($_SESSION['group'] == 'klient') {
                             <option value="Błąd">Błędne zgłoszenie</option>
                         </select>
                     </th>
+                  
                 </tr>
 
 
@@ -276,9 +286,14 @@ if($_SESSION['group'] == 'klient') {
                         <span v-if="!elem.editable"> {{elem.opis_niezgodnosci}}</span>
                         <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
                     </td>
-                    <td @click="handleChange(elem,'uwagi_inwestora')" class="clientside">
+                    <td @click="handleChange(elem,'uwagi_inwestora')" >
                         <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
                         <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
+                    </td>
+
+                    <td class="clientside">
+                        <a v-if="elem.link":href="elem.link" target="_blank">link</a>
+                        <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false">
                     </td>
 
                     <td  @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}">
@@ -335,7 +350,9 @@ if($_SESSION['group'] == 'klient') {
                     </td>
                     
 
-
+                    <td>
+                        {{elem.akcja}}
+                    </td>
                     <td><button class="btn-sm btn-danger" @click="usun(elem.id)">Usuń</button></td>
 
 
@@ -376,8 +393,11 @@ if($_SESSION['group'] == 'klient') {
                     <td>
                         <textarea v-model="form.opis_niezgodnosci" style="width:250px"></textarea>
                     </td>
-                    <td class="clientside">
+                    <td>
                         <textarea v-model="form.uwagi_inwestora" style="width:150px"></textarea>
+                    </td>
+                    <td class="clientside">
+
                     </td>
                     <td>
                         <select name="" id="" v-model="form.status" disabled>

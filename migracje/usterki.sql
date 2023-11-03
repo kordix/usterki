@@ -7,7 +7,6 @@ CREATE TABLE usterki (
     kontakt_klient varchar(255),
     data_klient varchar(255),
     uwagi_inwestora text,
-
     termin_zgloszenia varchar(255) default '',
     klasyfikacja varchar(255) default '',
     komentarz_serwisu text,
@@ -23,6 +22,7 @@ CREATE TABLE usterki (
     nr_oferty varchar(255) default '',
     nr_zlecenia varchar(255) default '',
     created_at timestamp null,
-    updated_at timestamp NULL,
+    updated_at timestamp NULL,  
+    link text,
     INDEX idx_project_id(project_id)
 )
