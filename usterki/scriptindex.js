@@ -19,10 +19,10 @@ Vue.createApp({
     },
     async mounted() {
         let self = this;
-        axios.get('api/projects.php').then((res) => self.projekty = res.data);
-        await axios.get('api/getuser.php').then((res) => self.user = res.data);
-        await axios.get('api/rights.php').then((res) => self.rights = res.data);
-        await axios.get('api/users.php').then((res) => self.users = res.data);
+        axios.get('/usterki/api/projects.php').then((res) => self.projekty = res.data);
+        await axios.get('/usterki/api/getuser.php').then((res) => self.user = res.data);
+        await axios.get('/usterki/api/rights.php').then((res) => self.rights = res.data);
+        await axios.get('/usterki/api/users.php').then((res) => self.users = res.data);
 
 
 
@@ -34,10 +34,10 @@ Vue.createApp({
             console.log('test');
         },
         save(){
-            axios.post('api/projectadd.php', this.form).then((res) => location.reload());
+            axios.post('/usterki/api/projectadd.php', this.form).then((res) => location.reload());
         },
         deleteproject(){
-            axios.get('api/projectdelete.php?id=' + this.activeproject).then((res) => location.reload())
+            axios.get('/usterki/api/projectdelete.php?id=' + this.activeproject).then((res) => location.reload())
         },
         preview(){
             

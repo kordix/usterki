@@ -3,7 +3,8 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-    header('Location: /login.php');
+    header('Location: /usterki/logowanie.php');
+
 }
 
 
@@ -13,7 +14,8 @@ if(!isset($_SESSION['zalogowany'])) {
     return;
 }
 
-require('../cred.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 if($_SESSION['group'] == 'klient') {
     $dbh = new PDO("mysql:host=$hostname;dbname=$dbname;charset=UTF8", $user, $pass);
 
@@ -49,9 +51,9 @@ if($_SESSION['group'] == 'klient') {
     <link rel="icon" href="data:;base64,=">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>localhost:8003</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/mybootstrap.css">
+    <title>Usterki</title>
+    <link rel="stylesheet" href="/usterki/css/style.css">
+    <link rel="stylesheet" href="/usterki/css/mybootstrap.css">
 
     <meta name="robots" content="noindex">
 

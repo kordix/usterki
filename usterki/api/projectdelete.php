@@ -9,7 +9,8 @@ if(!isset($_SESSION['zalogowany'])) {
 
 
 
-require('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 
 $id = $_GET['id'];
 

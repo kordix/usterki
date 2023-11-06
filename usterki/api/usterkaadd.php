@@ -13,7 +13,8 @@ if($_SERVER['REQUEST_METHOD'] != 'POST') {
     return;
 }
 
-require_once('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 
 $dane = json_decode(file_get_contents('php://input'));
 

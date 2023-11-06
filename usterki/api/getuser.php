@@ -3,11 +3,13 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-    header('Location: /login.php');
+   header('Location: /usterki/logowanie.php');
+
 }
 
 
-require('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 
 
 $id = $_SESSION['id'];

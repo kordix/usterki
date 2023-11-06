@@ -2,7 +2,8 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])){
-  //  header('Location: /login.php');
+  //  header('Location: /usterki/logowanie.php');
+
 }
 
 ?>
@@ -14,6 +15,7 @@ if(!isset($_SESSION['zalogowany'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Rejestracja</title>
+        <meta name="robots" content="noindex">
 </head>
 <body style="margin-top:20px">
 
@@ -35,7 +37,7 @@ if(!isset($_SESSION['zalogowany'])){
 
 <p><b>{{error}}</b></p>
 
-<p v-if="registered">Świetnie - zarejestrowano użytkownika {{loginregistered}} . Możesz się  <a href="/login.php">zalogować</a></p>
+<p v-if="registered">Świetnie - zarejestrowano użytkownika {{loginregistered}} . Możesz się  <a href="/usterki/login.php">zalogować</a></p>
 
 
 </div>

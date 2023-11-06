@@ -7,7 +7,8 @@ if(!isset($_SESSION['zalogowany'])) {
 }
 
 
-require('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 $id = $_GET['id'];
 $query = "select (select created_at from logs where usterka_id = u.id order by id desc limit 1) as akcja,u.*,typy_niezgodnosci.description as typ_niezgodnosci_opis , u.termin_zgloszenia as termin_zgloszenia_opis , k.description as klasyfikacja_opis 
 from usterki u 

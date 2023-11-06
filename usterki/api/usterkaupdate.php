@@ -8,7 +8,8 @@ if(!isset($_SESSION['zalogowany'])) {
     return;
 }
 
-require_once('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 
 
 

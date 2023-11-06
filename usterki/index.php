@@ -3,7 +3,7 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-    header('Location: /login.php');
+    header('Location: /usterki/logowanie.php');
 }
 
 ?>
@@ -16,8 +16,8 @@ if(!isset($_SESSION['zalogowany'])) {
     <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/mybootstrap.css">
+    <link rel="stylesheet" href="/usterki/css/style.css">
+    <link rel="stylesheet" href="/usterki/css/mybootstrap.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 
@@ -58,7 +58,7 @@ if(!isset($_SESSION['zalogowany'])) {
                    
                             <td>{{elem.created_at}}</td>
                        
-                            <td><a :href="'project.php?id='+elem.id"> <button @click="preview(elem.id)">Wejdź</button></a></td>
+                            <td><a :href="'/usterki/project.php?id='+elem.id"> <button @click="preview(elem.id)">Wejdź</button></a></td>
                         </tr>
                     </table>
 
@@ -107,7 +107,7 @@ if(!isset($_SESSION['zalogowany'])) {
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
 
-    <script src="scriptindex.js">
+    <script src="/usterki/scriptindex.js">
 
     </script>
 </body>

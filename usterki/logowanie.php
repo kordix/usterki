@@ -2,7 +2,7 @@
 session_start();
 
 if(isset($_SESSION['zalogowany'])) {
-    header('location:/');
+    header('location:/usterki/');
 }
 
 ?>
@@ -16,7 +16,7 @@ if(isset($_SESSION['zalogowany'])) {
     <title>Zaloguj</title>
       <meta name="robots" content="noindex,nofollow" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <meta name="robots" content="noindex">
 </head>
 <body style="margin-top:20px">
 
@@ -54,7 +54,7 @@ let app = new Vue({
     methods:{
         zaloguj(){
             let self = this;
-            axios.post('api/zaloguj.php',{login:this.login,password:this.password}).then((res)=>{
+            axios.post('/usterki/api/zaloguj.php',{login:this.login,password:this.password}).then((res)=>{
                 console.log(res.data.length);
 
               

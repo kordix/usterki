@@ -5,7 +5,8 @@ if($_SERVER['REQUEST_METHOD'] != 'POST') {
 }
 session_start();
 
-require_once '../db.php';
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 
 // $dbh = null;
 

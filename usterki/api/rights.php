@@ -9,7 +9,8 @@ if(!isset($_SESSION['zalogowany'])) {
 }
 
 
-require('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 $query = "select r.*,u.login from rights r
 join users u on u.id = r.user_id";
 

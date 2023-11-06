@@ -3,7 +3,7 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-    header('Location: /login.php');
+    header('Location: /usterki/logowanie.php');
 }
 
 if($_SESSION['group'] == 'admin'){
@@ -13,7 +13,8 @@ if($_SESSION['group'] == 'admin'){
 }
 
 
-require('../db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+
 
 $query = "SELECT id,login,`group` from users";
 $sth = $dbh->prepare($query);
