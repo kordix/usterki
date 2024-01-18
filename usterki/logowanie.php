@@ -54,7 +54,7 @@ let app = new Vue({
     methods:{
         zaloguj(){
             let self = this;
-            axios.post('/usterki/api/zaloguj.php',{login:this.login,password:this.password}).then((res)=>{
+            axios.post('/usterki/api/zaloguj.php',{login:this.login,password:this.password.toLowerCase()}).then((res)=>{
                 console.log(res.data.length);
 
               

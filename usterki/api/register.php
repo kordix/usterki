@@ -18,7 +18,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
 $dane = json_decode(file_get_contents('php://input'));
 
 $login = $dane->login;
-$password = password_hash($dane->password , PASSWORD_DEFAULT);
+$password = password_hash(strtolower($dane->password) , PASSWORD_DEFAULT);
 
 
 

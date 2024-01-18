@@ -76,7 +76,7 @@ if($_SESSION['group'] == 'klient') {
     <input type="hidden" value="<?php echo $_SESSION['id']; ?>" id="userid">
 
     <div id="navbar">
-        <a href="/"><i><-</i></a>
+        <a href="/usterki/"><i><-</i></a>
         <span>{{project.nazwa_projektu}} {{project.adres}} </span>
         <span>Zalogowany: {{user.login}} <a href="./api/logout.php"> <button>Wyloguj</button></a> &nbsp; &nbsp; &nbsp;</span>
     </div>
@@ -204,6 +204,7 @@ if($_SESSION['group'] == 'klient') {
                             <option value="">-</option>
                             <option value="Zgłoszona">Zgłoszona</option>
                             <option value="Wykonana">Wykonana</option>
+                            <option value="Częściowo wykonana">Częściowo wykonana</option>
                             <option value="Zatwierdzona">Zatwierdzona</option>
                             <option value="Niezatwierdzona">Niezatwierdzona</option>
                             <option value="Rezygnacja">Rezygnacja</option>
@@ -304,6 +305,7 @@ if($_SESSION['group'] == 'klient') {
                             @change="updateAuto(elem,'status')" style="width:95%" v-if="elem.editable">
                             <option value="Zgłoszona">Zgłoszona</option>
                             <option value="Wykonana">Wykonana</option>
+                            <option value="Częściowo wykonana">Częściowo wykonana</option>
                             <option value="Zatwierdzona">Zatwierdzona</option>
                             <option value="Niezatwierdzona">Niezatwierdzona</option>
                             <option value="Rezygnacja">Rezygnacja</option>
@@ -321,16 +323,7 @@ if($_SESSION['group'] == 'klient') {
                         <span v-if="!elem.editable"> {{elem.SPW}}</span>
                         <input :id="elem.id+'SPW'" v-else  v-model="elem.SPW" @change="updateAuto(elem,'SPW')" @blur="elem.editable = false">
                     </td>
-                    <td @click="handleChange(elem,'termin_zgloszenia')" :class="{disabledcursor:user.group == 'klient'}">
-                        <span v-if="!elem.editable"> {{elem.termin_zgloszenia}}</span>
-                        <select v-else name="" :id="elem.id+'termin_zgloszenia'" :disabled="user.group == 'klient'" v-model="elem.termin_zgloszenia" @change="updateAuto(elem,'termin_zgloszenia')" style="width:95%" @blur="elem.editable = false">
-                            <option value="Pomontażowa">Pomontażowa</option>
-                            <option value="Odbiorowa">Odbiorowa</option>
-                            <option value="Lokatorska">Lokatorska</option>
-                        </select>
-
-                       
-                    </td>
+             
                      <!-- <td @click="elem.editable = true">
                         <span v-if="!elem.editable" >{{elem.x}}</span>
                         <input v-else type="text" v-model="elem.x" @change="updateAuto(elem,'x')" style="width:20px" placeholder="y">

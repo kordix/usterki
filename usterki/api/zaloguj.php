@@ -26,7 +26,7 @@ $rows = $query_run->fetchAll(PDO::FETCH_ASSOC);
 // echo password_verify('$2y$10$qN6UQsJXjT04OKR7Pp436eJDyDzW2d6eYE2oF.XkR8OEW9T1iT/0a', 'zasdfgh');
 
 if(count($rows) > 0) {
-    if (password_verify($dane->password, $rows[0]['password'])) {
+    if (password_verify(strtolower($dane->password), $rows[0]['password'])) {
         $_SESSION['zalogowany'] = true;
         $_SESSION['id'] = $rows[0]['id'];
         $_SESSION['group'] = $rows[0]['group'];

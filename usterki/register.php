@@ -63,7 +63,7 @@ let app = new Vue({
                 return;
             }
             let self = this;
-            axios.post('api/register.php',{login:this.login,password:this.password}).then((res)=>{
+            axios.post('api/register.php',{login:this.login,password:this.password.toLowerCase()}).then((res)=>{
                 console.log(res.data)
 
          
