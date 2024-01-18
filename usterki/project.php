@@ -136,9 +136,6 @@ if($_SESSION['group'] == 'klient') {
                         SPW
                     </th>
                    
-                    <th>
-                        <span style="opacity:0.8">Termin zgłoszenia</span>
-                    </th>
                     <!-- <th style="width:20px">
                         <span style="opacity:0.8">x</span>
                     </th>
@@ -220,15 +217,6 @@ if($_SESSION['group'] == 'klient') {
                         <input type="text" v-model="filtry.SPW">
                     </th>
 
-               
-                    <th>
-                        <select name="" id="" v-model="filtry.termin_zgloszenia" style="width:95%">
-                            <option value="">-</option>
-                            <option value="Pomontażowa">Pomontażowa</option>
-                            <option value="Odbiorowa">Odbiorowa</option>
-                            <option value="Lokatorska">Lokatorska</option>
-                        </select>
-                    </th>
                     <!-- <th></th>
                     <th></th> -->
                     <th>
@@ -409,13 +397,6 @@ if($_SESSION['group'] == 'klient') {
                     </td>
                     <td>
                         <input  v-model="form.SPW" style="width:100px" :disabled="user.group == 'klient'">
-                    </td>
-                    <td>
-                        <select name="" id="" v-model="form.termin_zgloszenia" disabled>
-                            <option value="Pomontażowa">Pomontażowa</option>
-                            <option value="Odbiorowa">Odbiorowa</option>
-                            <option value="Lokatorska">Lokatorska</option>
-                        </select>  
                     </td>
                     <!-- <td>
                         <input v-model="form.x">
