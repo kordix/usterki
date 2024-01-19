@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px black solid;
+            border-spacing: 0px;
+            margin: 0px;
+            padding: 5px;
+
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="app">
+        <table>
+            <!-- <tr>
+                <td>strefa klienta</td>
+                <td>strefa serwisu</td>
+            </tr> -->
+
+            <tr>
+                <td>Numer budowlany</td>
+                <td>Numer lokalu</td>
+                <td>Opis usterki</td>
+                <td>komentarz serwisu</td>
+                <td>SPW</td>
+            </tr>
+
+            <br>
+            <template v-for="elem in cruddata">
+
+                <tr>
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length">{{elem.nrbud}}</td>
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length">{{elem.nrlokal}}</td>
+
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length">
+                        {{elem.usterka}}
+                    </td>
+                    <td>
+                        {{elem.komentarzserwis}}
+                    </td>
+                    <td>
+                        SPW-23-00200
+                    </td>
+                    <td>
+                        <button @click="addExtra(elem.id)">+</button>
+                    </td>
+                </tr>
+                <tr v-for="ext in extras.filter((el)=>el.id==elem.id)">
+
+                    <td>
+                        {{ext.komentarzserwis}}
+                    </td>
+                    <td>
+                        {{ext.spw}}
+                    </td>
+
+
+                </tr>
+
+            </template>
+
+        </table>
+
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+
+    <script>
+        Vue.createApp({
+
+            data() {
+                return {
+                    cruddata: [
+                        {
+                            id: 1,
+                            rowspan: 2,
+                            nrbud: '1',
+                            nrlokal: '20B',
+                            usterka: 'rozwalony nawiewnik i zawias',
+                            komentarzserwis: 'naprawić nawiewnik',
+                            spw: ''
+                        },
+
+                        {
+                            id: 2,
+                            rowspan: 1,
+                            nrbud: '2',
+                            nrlokal: '30B',
+                            usterka: 'coś tam innego',
+                            komentarzserwis: 'coś tam zrobić',
+                            spw: ''
+                        },
+                        {
+                            id: 3,
+                            rowspan: 3,
+                            nrbud: '2',
+                            nrlokal: '30B',
+                            usterka: 'coś tam jeszcze innego',
+                            komentarzserwis: 'coś tam zrobić',
+                            spw: ''
+                        }
+                    ],
+                    extras: [
+                        {
+                            id: 3,
+                            komentarzserwis: 'naprawić zawias',
+                            spw: '-'
+                        },
+                    ]
+                }
+            },
+            methods: {
+                addExtra(id) {
+                    this.extras.push({
+                        id: id,
+                        komentarzserwis: 'dodatkowe zadanie'
+                    })
+                }
+            }
+
+        }).mount('#app')
+    </script>
+
+</body>
+
+</html>

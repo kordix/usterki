@@ -234,33 +234,33 @@ if($_SESSION['group'] == 'klient') {
 
                 <!-- DANE -->
                 <tr v-for="(elem,index) in filtered" :class="{'wykonana':elem.status == 'wykonana'}">
-                    <td>#{{elem.id}}</td>
-                    <td><span style="width:100px;display:block">  {{elem.created_at}}</span></td>
-                    <td @click="handleChange(elem,'lokal')">
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length">#{{elem.id}}</td>
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'lokal')">
                         <span v-if="!elem.editable"> {{elem.lokal}}</span>
                         <input @keyup.enter="elem.editable = false" :id="elem.id+'lokal'" v-else type="text" v-model="elem.lokal" @change="updateAuto(elem,'lokal')" style="width:90%" @blur.stop="elem.editable = false">
                     </td>
 
-                    <td @click="handleChange(elem,'adres_admin')">
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'adres_admin')">
                         <span v-if="!elem.editable"> {{elem.adres_admin}}</span>
                         <input @keyup.enter="elem.editable = false" :id="elem.id+'adres_admin'"  v-else type="text" v-model="elem.adres_admin" @change="updateAuto(elem,'adres_admin')" @blur.stop="elem.editable = false">
                     </td>
 
-                    <td @click="handleChange(elem,'nr_admin')" >
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'nr_admin')" >
                         <span v-if="!elem.editable"> {{elem.nr_admin}}</span>
                         <input :id="elem.id+'nr_admin'"  v-else type="text" v-model="elem.nr_admin" @change="updateAuto(elem,'nr_admin')" @blur.stop="elem.editable = false">
                     </td>
 
-                    <td @click="handleChange(elem,'kontakt_klient')" >
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'kontakt_klient')" >
                         <span v-if="!elem.editable"> {{elem.kontakt_klient}}</span>
                         <input :id="elem.id+'kontakt_klient'"  v-else type="text" v-model="elem.kontakt_klient" @change="updateAuto(elem,'kontakt_klient')" @blur.stop="elem.editable = false">
                     </td>
 
-                    <td @click="handleChange(elem,'data_klient')">
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'data_klient')">
                         <span v-if="!elem.editable"> {{elem.data_klient}}</span>
                         <input v-else :id="elem.id+'data_klient'" type="date" v-model="elem.data_klient" @blur.stop="updateAuto(elem,'data_klient')">
                     </td>
-                    <td @click="handleChange(elem,'typ_niezgodnosci')">
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'typ_niezgodnosci')">
                         <span v-if="!elem.editable">{{elem.typ_niezgodnosci}}</span>
                         <select name="" :id="elem.id+'typ_niezgodnosci'" v-model="elem.typ_niezgodnosci" @change="updateAuto(elem,'typ_niezgodnosci')" style="width:95%" v-if="elem.editable" @blur.stop="elem.editable = false">
                            <option value="">-</option>
@@ -273,11 +273,11 @@ if($_SESSION['group'] == 'klient') {
                         </select>
 
                     </td>
-                    <td @click="handleChange(elem,'opis_niezgodnosci')">
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')">
                         <span v-if="!elem.editable"> {{elem.opis_niezgodnosci}}</span>
                         <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
                     </td>
-                    <td @click="handleChange(elem,'uwagi_inwestora')" >
+                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" >
                         <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
                         <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
                     </td>
@@ -287,6 +287,7 @@ if($_SESSION['group'] == 'klient') {
                         <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false">
                     </td>
 
+                    <!-- SERWIS -->
                     <td  @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable">{{elem.status}}</span>
                         <select name="" :id="elem.id+'status'"  v-model="elem.status" :disabled="user.group == 'klient'"
@@ -303,9 +304,10 @@ if($_SESSION['group'] == 'klient') {
 
                     </td>
 
-                    <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}">
+                    <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
                         <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
                         <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
+                                 <button @click="rozbij" v-if="elem.editable" style="position:absolute;right:0px;" >+</button>
                     </td>
                     <td @click="handleChange(elem,'SPW')" :class="{disabledcursor:user.group == 'klient'}">
                         <span v-if="!elem.editable"> {{elem.SPW}}</span>
@@ -393,7 +395,7 @@ if($_SESSION['group'] == 'klient') {
                         </select>
                     </td>
                     <td>
-                        <textarea style="width:200px"  v-model="form.komentarz_serwisu" :disabled="user.group == 'klient'">></textarea>
+                        <textarea style="width:400px"  v-model="form.komentarz_serwisu" :disabled="user.group == 'klient'">></textarea>
                     </td>
                     <td>
                         <input  v-model="form.SPW" style="width:100px" :disabled="user.group == 'klient'">

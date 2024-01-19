@@ -1,5 +1,6 @@
 CREATE TABLE usterki (
     id int PRIMARY KEY AUTO_INCREMENT,
+    usterka_id int NULL,
     typ_niezgodnosci varchar(255) default '',
     opis_niezgodnosci text,
     adres_admin text,

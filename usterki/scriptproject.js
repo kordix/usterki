@@ -37,7 +37,17 @@ Vue.createApp({
                 status: 'Zgłoszona',
                 termin_zgloszenia: 'Lokatorska'
             },
-            crudmode: 'add'
+            crudmode: 'add',
+            extras:[
+                // {
+                //     id:1,
+                //     status:'Zgłoszona',
+                //     komentarz_serwisu:'nowa rzecz',
+                //     spw:'',
+                //     klasyfikacja:''
+
+                // }
+            ]
         }
     },
     async mounted() {
