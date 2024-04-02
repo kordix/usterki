@@ -43,7 +43,7 @@ echo $setStr;
 
 
 
-$query = "UPDATE usterki SET $setStr WHERE id = :id";
+$query = "UPDATE extras SET $setStr WHERE id = :id";
 echo $query;
 $sth = $dbh->prepare($query)->execute($params);
 

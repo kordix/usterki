@@ -1,4 +1,4 @@
-CREATE TABLE usterki (
+CREATE TABLE extras (
     id int PRIMARY KEY AUTO_INCREMENT,
     usterka_id int NULL,
     typ_niezgodnosci varchar(255) default '',

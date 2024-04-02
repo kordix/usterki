@@ -38,15 +38,15 @@ Vue.createApp({
                 termin_zgloszenia: 'Lokatorska'
             },
             crudmode: 'add',
-            extras:[
-                // {
-                //     id:1,
-                //     status:'Zgłoszona',
-                //     komentarz_serwisu:'nowa rzecz',
-                //     spw:'',
-                //     klasyfikacja:''
+            extras: [
+                {
+                    usterka_id: 1,
+                    status: 'Zgłoszona',
+                    komentarz_serwisu: 'nowa rzecz',
+                    spw: '',
+                    klasyfikacja: ''
 
-                // }
+                }
             ]
         }
     },
@@ -55,11 +55,14 @@ Vue.createApp({
         const id = document.querySelector('#projectid').innerHTML;
         await axios.get('api/project.php?id=' + id).then((res) => self.project = res.data[0]);
         await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
+        await axios.get('api/extras.php?id=' + id).then((res) => self.extras = res.data);
+
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
 
 
     },
     methods: {
+
         setPlany() {
             let self = this;
             this.activesection = 'plany';
@@ -67,7 +70,7 @@ Vue.createApp({
                 self.generateMap();
             }, 150)
         },
-        handleChange(elem, kolumna) {
+        handleChange(elem, kolumna , tabela) {
             if (this.user.group == 'klient') {
                 if (['status', 'komentarz_serwisu', 'SPW', 'termin_zgloszenia', 'klasyfikacja'].indexOf(kolumna) > -1) {
                     return
@@ -77,7 +80,7 @@ Vue.createApp({
             console.log(elem.id + kolumna);
             setTimeout(() => {
                 if (document.getElementById(elem.id + kolumna)) {
-                    document.getElementById(elem.id + kolumna).focus();
+                    // document.getElementById(elem.id + kolumna).focus();
                 }
             }, 100);
 
@@ -114,12 +117,19 @@ Vue.createApp({
 
 
         },
-        async updateAuto(elem, column) {
+        async updateAuto(elem, column, tabela) {
             let self = this;
             let formlocal = {}
             formlocal[column] = elem[column];
 
-            await fetch('api/usterkaupdate.php', { method: 'POST', body: JSON.stringify({ dane: formlocal, id: elem.id }) }).then((res) => self.messages.push('zapisano zmiany'));
+
+            let endpoint = 'api/usterkaupdate.php';
+
+            if(tabela === 'extra'){
+                endpoint = 'api/extraupdate.php';
+            }
+
+            await fetch(endpoint, { method: 'POST', body: JSON.stringify({ dane: formlocal, id: elem.id }) }).then((res) => self.messages.push('zapisano zmiany'));
             elem.editable = false;
         },
         generatePoints() {
@@ -172,6 +182,17 @@ Vue.createApp({
             await axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'));
             location.reload();
         },
+        async addExtra(id) {
+            const project_id = document.querySelector('#projectid').innerHTML;
+
+            let extraform = {
+                status:'Zgłoszona',
+                project_id: project_id,
+                usterka_id:id,
+                komentarz_serwisu:'NOWA RZECZ'
+            };
+            await axios.post('api/extraadd.php', extraform).then((res) => location.reload());
+        },
         update(id) {
             let self = this;
 
@@ -185,6 +206,10 @@ Vue.createApp({
         },
         async usun(id) {
             await axios.get('api/usterkadelete.php?id=' + id);
+            location.reload();
+        },
+        async usunExtra(id) {
+            await axios.get('api/usterkaextradelete.php?id=' + id);
             location.reload();
         }
     },

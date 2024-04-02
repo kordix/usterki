@@ -233,115 +233,170 @@ if($_SESSION['group'] == 'klient') {
 
 
                 <!-- DANE -->
-                <tr v-for="(elem,index) in filtered" :class="{'wykonana':elem.status == 'wykonana'}">
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length">#{{elem.id}}</td>
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'lokal')">
-                        <span v-if="!elem.editable"> {{elem.lokal}}</span>
-                        <input @keyup.enter="elem.editable = false" :id="elem.id+'lokal'" v-else type="text" v-model="elem.lokal" @change="updateAuto(elem,'lokal')" style="width:90%" @blur.stop="elem.editable = false">
-                    </td>
+                <template v-for="(elem,index) in filtered" >      
+                    <tr :class="{'wykonana':elem.status == 'wykonana'}">
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length">#{{elem.id}}</td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'lokal')">
+                            <span v-if="!elem.editable"> {{elem.lokal}}</span>
+                            <input @keyup.enter="elem.editable = false" :id="elem.id+'lokal'" v-else type="text" v-model="elem.lokal" @change="updateAuto(elem,'lokal')" style="width:90%" @blur.stop="elem.editable = false">
+                        </td>
 
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'adres_admin')">
-                        <span v-if="!elem.editable"> {{elem.adres_admin}}</span>
-                        <input @keyup.enter="elem.editable = false" :id="elem.id+'adres_admin'"  v-else type="text" v-model="elem.adres_admin" @change="updateAuto(elem,'adres_admin')" @blur.stop="elem.editable = false">
-                    </td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'adres_admin')">
+                            <span v-if="!elem.editable"> {{elem.adres_admin}}</span>
+                            <input @keyup.enter="elem.editable = false" :id="elem.id+'adres_admin'"  v-else type="text" v-model="elem.adres_admin" @change="updateAuto(elem,'adres_admin')" @blur.stop="elem.editable = false">
+                        </td>
 
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'nr_admin')" >
-                        <span v-if="!elem.editable"> {{elem.nr_admin}}</span>
-                        <input :id="elem.id+'nr_admin'"  v-else type="text" v-model="elem.nr_admin" @change="updateAuto(elem,'nr_admin')" @blur.stop="elem.editable = false">
-                    </td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'nr_admin')" >
+                            <span v-if="!elem.editable"> {{elem.nr_admin}}</span>
+                            <input :id="elem.id+'nr_admin'"  v-else type="text" v-model="elem.nr_admin" @change="updateAuto(elem,'nr_admin')" @blur.stop="elem.editable = false">
+                        </td>
 
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'kontakt_klient')" >
-                        <span v-if="!elem.editable"> {{elem.kontakt_klient}}</span>
-                        <input :id="elem.id+'kontakt_klient'"  v-else type="text" v-model="elem.kontakt_klient" @change="updateAuto(elem,'kontakt_klient')" @blur.stop="elem.editable = false">
-                    </td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'kontakt_klient')" >
+                            <span v-if="!elem.editable"> {{elem.kontakt_klient}}</span>
+                            <input :id="elem.id+'kontakt_klient'"  v-else type="text" v-model="elem.kontakt_klient" @change="updateAuto(elem,'kontakt_klient')" @blur.stop="elem.editable = false">
+                        </td>
 
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'data_klient')">
-                        <span v-if="!elem.editable"> {{elem.data_klient}}</span>
-                        <input v-else :id="elem.id+'data_klient'" type="date" v-model="elem.data_klient" @blur.stop="updateAuto(elem,'data_klient')">
-                    </td>
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'typ_niezgodnosci')">
-                        <span v-if="!elem.editable">{{elem.typ_niezgodnosci}}</span>
-                        <select name="" :id="elem.id+'typ_niezgodnosci'" v-model="elem.typ_niezgodnosci" @change="updateAuto(elem,'typ_niezgodnosci')" style="width:95%" v-if="elem.editable" @blur.stop="elem.editable = false">
-                           <option value="">-</option>
-                            <option value="Wada szyby">Wada szyby</option>
-                            <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
-                            <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
-                            <option value="Brak / niekompletność">Brak / niekompletność</option>
-                            <option value="Wada funkcjonowania">Wada funkcjonowania</option>
-                            <option value="Wada wymiarowa">Wada wymiarowa</option>
-                        </select>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'data_klient')">
+                            <span v-if="!elem.editable"> {{elem.data_klient}}</span>
+                            <input v-else :id="elem.id+'data_klient'" type="date" v-model="elem.data_klient" @blur.stop="updateAuto(elem,'data_klient')">
+                        </td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'typ_niezgodnosci')">
+                            <span v-if="!elem.editable">{{elem.typ_niezgodnosci}}</span>
+                            <select name="" :id="elem.id+'typ_niezgodnosci'" v-model="elem.typ_niezgodnosci" @change="updateAuto(elem,'typ_niezgodnosci')" style="width:95%" v-if="elem.editable" @blur.stop="elem.editable = false">
+                            <option value="">-</option>
+                                <option value="Wada szyby">Wada szyby</option>
+                                <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
+                                <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
+                                <option value="Brak / niekompletność">Brak / niekompletność</option>
+                                <option value="Wada funkcjonowania">Wada funkcjonowania</option>
+                                <option value="Wada wymiarowa">Wada wymiarowa</option>
+                            </select>
 
-                    </td>
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')">
-                        <span v-if="!elem.editable"> {{elem.opis_niezgodnosci}}</span>
-                        <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
-                    </td>
-                    <td :rowspan="1 + extras.filter(el=>el.id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" >
-                        <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
-                        <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
-                    </td>
+                        </td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')">
+                            <span v-if="!elem.editable"> {{elem.opis_niezgodnosci}}</span>
+                            <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
+                        </td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" >
+                            <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
+                            <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
+                        </td>
 
-                    <td class="clientside">
-                        <a v-if="elem.link":href="elem.link" target="_blank">link</a>
-                        <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false">
-                    </td>
+                        <td class="clientside">
+                            <a v-if="elem.link":href="elem.link" target="_blank">link</a>
+                            <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false">
+                        </td>
 
-                    <!-- SERWIS -->
-                    <td  @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}">
-                        <span v-if="!elem.editable">{{elem.status}}</span>
-                        <select name="" :id="elem.id+'status'"  v-model="elem.status" :disabled="user.group == 'klient'"
-                            @change="updateAuto(elem,'status')" style="width:95%" v-if="elem.editable">
-                            <option value="Zgłoszona">Zgłoszona</option>
-                            <option value="Wykonana">Wykonana</option>
-                            <option value="Częściowo wykonana">Częściowo wykonana</option>
-                            <option value="Zatwierdzona">Zatwierdzona</option>
-                            <option value="Niezatwierdzona">Niezatwierdzona</option>
-                            <option value="Rezygnacja">Rezygnacja</option>
-                            <option value="Niezasadna">Niezasadna</option>
-                    
-                        </select>
+                        <!-- SERWIS -->
+                        <td  @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}">
+                            <span v-if="!elem.editable">{{elem.status}}</span>
+                            <select name="" :id="elem.id+'status'"  v-model="elem.status" :disabled="user.group == 'klient'"
+                                @change="updateAuto(elem,'status')" style="width:95%" v-if="elem.editable">
+                                <option value="Zgłoszona">Zgłoszona</option>
+                                <option value="Wykonana">Wykonana</option>
+                                <option value="Częściowo wykonana">Częściowo wykonana</option>
+                                <option value="Zatwierdzona">Zatwierdzona</option>
+                                <option value="Niezatwierdzona">Niezatwierdzona</option>
+                                <option value="Rezygnacja">Rezygnacja</option>
+                                <option value="Niezasadna">Niezasadna</option>
+                        
+                            </select>
 
-                    </td>
+                        </td>
 
-                    <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
-                        <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
-                        <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
-                                 <button @click="rozbij" v-if="elem.editable" style="position:absolute;right:0px;" >+</button>
-                    </td>
-                    <td @click="handleChange(elem,'SPW')" :class="{disabledcursor:user.group == 'klient'}">
-                        <span v-if="!elem.editable"> {{elem.SPW}}</span>
-                        <input :id="elem.id+'SPW'" v-else  v-model="elem.SPW" @change="updateAuto(elem,'SPW')" @blur="elem.editable = false">
-                    </td>
-             
-                     <!-- <td @click="elem.editable = true">
-                        <span v-if="!elem.editable" >{{elem.x}}</span>
-                        <input v-else type="text" v-model="elem.x" @change="updateAuto(elem,'x')" style="width:20px" placeholder="y">
-                    </td>
-                    <td @click="elem.editable = true">
-                        <span v-if="!elem.editable" >{{elem.y}}</span>
-                        <input v-else type="text" v-model="elem.y" @change="updateAuto(elem,'y')" style="width:20px" placeholder="y">
-                    </td> -->
-                    <td @click="elem.editable = true" :class="{disabledcursor:user.group == 'klient'}">
-                        <span v-if="!elem.editable">{{elem.klasyfikacja}}</span>
-                        <select name="" id="" v-model="elem.klasyfikacja"
-                            @change="updateAuto(elem,'klasyfikacja')" style="width:95%" v-if="elem.editable" :disabled="user.group == 'klient'">
-                            <option value="Gwarancyjna">Gwarancyjna</option>
-                            <option value="W normie">W normie</option>
-                            <option value="Odpłatna">Odpłatna</option>
-                            <option value="Błędne zgłoszenie">Błędne zgłoszenie</option>
-                        </select>
+                        <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
+                            <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
+                            <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
+                        </td>
+                        <td @click="handleChange(elem,'SPW')" :class="{disabledcursor:user.group == 'klient'}">
+                            <span v-if="!elem.editable"> {{elem.SPW}}</span>
+                            <input :id="elem.id+'SPW'" v-else  v-model="elem.SPW" @change="updateAuto(elem,'SPW')" @blur="elem.editable = false">
+                        </td>
+                
+                        <!-- <td @click="elem.editable = true">
+                            <span v-if="!elem.editable" >{{elem.x}}</span>
+                            <input v-else type="text" v-model="elem.x" @change="updateAuto(elem,'x')" style="width:20px" placeholder="y">
+                        </td>
+                        <td @click="elem.editable = true">
+                            <span v-if="!elem.editable" >{{elem.y}}</span>
+                            <input v-else type="text" v-model="elem.y" @change="updateAuto(elem,'y')" style="width:20px" placeholder="y">
+                        </td> -->
+                        <td @click="elem.editable = true" :class="{disabledcursor:user.group == 'klient'}">
+                            <span v-if="!elem.editable">{{elem.klasyfikacja}}</span>
+                            <select name="" id="" v-model="elem.klasyfikacja"
+                                @change="updateAuto(elem,'klasyfikacja')" style="width:95%" v-if="elem.editable" :disabled="user.group == 'klient'">
+                                <option value="Gwarancyjna">Gwarancyjna</option>
+                                <option value="W normie">W normie</option>
+                                <option value="Odpłatna">Odpłatna</option>
+                                <option value="Błędne zgłoszenie">Błędne zgłoszenie</option>
+                            </select>
 
-                    </td>
-                    
+                        </td>
+                        
 
-                    <td>
-                        {{elem.akcja}}
-                    </td>
-                    <td><button class="btn-sm btn-danger" @click="usun(elem.id)">Usuń</button></td>
+                        <td>
+                            {{elem.akcja}}
+                        </td>
+                        <td style="width:150px">
+                            <div style="display:flex;flex-wrap:no-wrap">
+                                <button class="btn-sm btn-danger" @click="usun(elem.id)" style="display:inline-block;margin-right:5px">Usuń</button>
+                                <button @click="addExtra(elem.id)" style="display:inline-block">+</button>
+                            </div>
+                        </td>
 
 
-                </tr>
+                    </tr>
+
+                    <tr v-for="ext in extras.filter((el)=>el.usterka_id==elem.id)">
+                        <!-- <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td> -->
+                        <td class="clientside">link</td>
+                        <td @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}"> 
+                            <span v-if="!elem.editable">{{ext.status}}</span>
+                            <select name="" :id="ext.id+'status'"  v-model="ext.status" :disabled="user.group == 'klient'"
+                                @change="updateAuto(ext,'status', 'extra')" style="width:95%" v-if="elem.editable">
+                                <option value="Zgłoszona">Zgłoszona</option>
+                                <option value="Wykonana">Wykonana</option>
+                                <option value="Częściowo wykonana">Częściowo wykonana</option>
+                                <option value="Zatwierdzona">Zatwierdzona</option>
+                                <option value="Niezatwierdzona">Niezatwierdzona</option>
+                                <option value="Rezygnacja">Rezygnacja</option>
+                                <option value="Niezasadna">Niezasadna</option>
+                        
+                            </select>
+                        </td>
+
+
+                        <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
+                            <span v-if="!elem.editable"> {{ext.komentarz_serwisu}}</span>
+                            <textarea :id="ext.id+'komentarz_serwisu'" v-else  v-model="ext.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(ext,'komentarz_serwisu','extra')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
+                        </td>
+                        <td>
+                            {{ext.spw}}
+                        </td>
+                        <td>
+                            {{ext.klasyfikacja}}
+                        </td>
+                        <td>
+                            {{ext.akcja}}
+                        </td>
+                        <td>
+                            
+                                <button class="btn-sm btn-danger" @click="usunExtra(ext.id)" style="display:inline-block;margin-right:5px">Usuń</button>
+                            
+
+                        </td>
+                    </tr>
+                </template>
                 <!-- DODAWANIE -->
                 <tr id="addformtable" class="addrow">
                     <td><button class="btn btn-primary" style="padding:2px" @click="save"
