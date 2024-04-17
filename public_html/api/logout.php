@@ -8,7 +8,7 @@ unset($_SESSION['zalogowany']);
 
 session_destroy();
 
-header('Location: /usterki/logowanie.php');
+header('Location: /logowanie.php');
 
 
 

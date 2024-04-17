@@ -3,7 +3,7 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-    header('Location: /usterki/logowanie.php');
+    header('Location: /logowanie.php');
 
 }
 
@@ -14,7 +14,7 @@ if(!isset($_SESSION['zalogowany'])) {
     return;
 }
 
-require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 if($_SESSION['group'] == 'klient') {
     $dbh = new PDO("mysql:host=$hostname;dbname=$dbname;charset=UTF8", $user, $pass);
@@ -52,8 +52,8 @@ if($_SESSION['group'] == 'klient') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usterki</title>
-    <link rel="stylesheet" href="/usterki/css/style.css">
-    <link rel="stylesheet" href="/usterki/css/mybootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/mybootstrap.css">
 
     <meta name="robots" content="noindex">
 
@@ -76,7 +76,7 @@ if($_SESSION['group'] == 'klient') {
     <input type="hidden" value="<?php echo $_SESSION['id']; ?>" id="userid">
 
     <div id="navbar">
-        <a href="/usterki/"><i><-</i></a>
+        <a href="/"><i><-</i></a>
         <span>{{project.nazwa_projektu}} {{project.adres}} </span>
         <span>Zalogowany: {{user.login}} <a href="./api/logout.php"> <button>Wyloguj</button></a> &nbsp; &nbsp; &nbsp;</span>
     </div>
@@ -341,7 +341,7 @@ if($_SESSION['group'] == 'klient') {
                         <td style="width:150px">
                             <div style="display:flex;flex-wrap:no-wrap">
                                 <button class="btn-sm btn-danger" @click="usun(elem.id)" style="display:inline-block;margin-right:5px">Usuń</button>
-                                <button @click="addExtra(elem.id)" style="display:inline-block">+</button>
+                                <button @click="addExtra(elem.id)" style="display:inline-block" :disabled="user.group == 'klient'">+</button>
                             </div>
                         </td>
 

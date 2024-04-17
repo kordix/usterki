@@ -1,5 +1,6 @@
 <?php
 
+
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
@@ -8,15 +9,13 @@ if(!isset($_SESSION['zalogowany'])) {
 }
 
 
-require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
-$id = $_GET['id'];
-$query = "select * from extras where project_id = ?";
-
-
+$query = "select r.*,u.login from rights r
+join users u on u.id = r.user_id";
 
 $sth = $dbh->prepare($query);
-$sth->execute([$id]);
+$sth->execute();
 
 $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
 echo json_encode($rows);

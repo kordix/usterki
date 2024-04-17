@@ -1,21 +1,26 @@
 <?php
 
-
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-    echo 'NIEZALOGOWANY';
+    header('Location: /logowanie.php');
+}
+
+if($_SESSION['group'] == 'admin'){
+    
+}else{
     return;
 }
 
 
-require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
-$query = "select r.*,u.login from rights r
-join users u on u.id = r.user_id";
 
+$query = "SELECT id,login,`group` from users";
 $sth = $dbh->prepare($query);
+
 $sth->execute();
 
 $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+
 echo json_encode($rows);

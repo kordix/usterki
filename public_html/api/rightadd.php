@@ -11,7 +11,7 @@ if(!isset($_SESSION['zalogowany'])) {
 $userid = $_GET['userid'];
 $projectid = $_GET['projectid'];
 
-require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 
 $query = "INSERT INTO rights (user_id,project_id) values (?,?)";

@@ -3,7 +3,7 @@
 //if($_SERVER['REQUEST_METHOD'] != 'POST') return;
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/cred.php';
+require_once '../cred.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

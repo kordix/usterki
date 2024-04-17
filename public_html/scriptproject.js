@@ -70,7 +70,7 @@ Vue.createApp({
                 self.generateMap();
             }, 150)
         },
-        handleChange(elem, kolumna , tabela) {
+        handleChange(elem, kolumna, tabela) {
             if (this.user.group == 'klient') {
                 if (['status', 'komentarz_serwisu', 'SPW', 'termin_zgloszenia', 'klasyfikacja'].indexOf(kolumna) > -1) {
                     return
@@ -79,8 +79,10 @@ Vue.createApp({
             elem.editable = true;
             console.log(elem.id + kolumna);
             setTimeout(() => {
-                if (document.getElementById(elem.id + kolumna)) {
-                    // document.getElementById(elem.id + kolumna).focus();
+                if (kolumna != 'komentarz_serwisu') {
+                    if (document.getElementById(elem.id + kolumna)) {
+                        document.getElementById(elem.id + kolumna).focus();
+                    }
                 }
             }, 100);
 
@@ -125,7 +127,7 @@ Vue.createApp({
 
             let endpoint = 'api/usterkaupdate.php';
 
-            if(tabela === 'extra'){
+            if (tabela === 'extra') {
                 endpoint = 'api/extraupdate.php';
             }
 
@@ -186,10 +188,10 @@ Vue.createApp({
             const project_id = document.querySelector('#projectid').innerHTML;
 
             let extraform = {
-                status:'Zgłoszona',
+                status: 'Zgłoszona',
                 project_id: project_id,
-                usterka_id:id,
-                komentarz_serwisu:'NOWA RZECZ'
+                usterka_id: id,
+                komentarz_serwisu: 'NOWA RZECZ'
             };
             await axios.post('api/extraadd.php', extraform).then((res) => location.reload());
         },

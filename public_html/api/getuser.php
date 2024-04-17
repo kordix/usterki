@@ -3,12 +3,12 @@
 session_start();
 
 if(!isset($_SESSION['zalogowany'])) {
-   header('Location: /usterki/logowanie.php');
+   header('Location: /logowanie.php');
 
 }
 
 
-require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 
 

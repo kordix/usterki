@@ -7,7 +7,7 @@ if(!isset($_SESSION['zalogowany'])) {
 }
 
 
-require($_SERVER['DOCUMENT_ROOT'] . '/usterki/db.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 $id = $_GET['id'];
 $query = "select 1 as rowspan, (select created_at from logs where usterka_id = u.id order by id desc limit 1) as akcja,u.*,typy_niezgodnosci.description as typ_niezgodnosci_opis , u.termin_zgloszenia as termin_zgloszenia_opis , k.description as klasyfikacja_opis 
