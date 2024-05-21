@@ -163,3 +163,15 @@ th{
  .disabledcursor {
     cursor: not-allowed;
  }
+
+  .separator{
+      content: "";
+      border-top: 2px solid lightcoral;
+      margin-top: 8px;
+      margin-bottom: 8px;
+  }
+
+  .separator{
+    
+    /* border:2px red solid; */
+  }

@@ -14,7 +14,10 @@ $query = "select 1 as rowspan, (select created_at from logs where usterka_id = u
 from usterki u 
 left outer join typy_niezgodnosci on typy_niezgodnosci.code = u.typ_niezgodnosci
 left outer join klasyfikacje k on k.code = u.klasyfikacja
-where project_id = ? order by id asc";
+where project_id = ? 
+order by (SELECT MIN(created_at) FROM usterki AS ui WHERE ui.lokal = u.lokal) ASC
+
+";
 
 
 

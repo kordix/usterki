@@ -57,8 +57,8 @@ if($_SESSION['group'] == 'klient') {
 
     <meta name="robots" content="noindex">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> -->
 
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css">
 
@@ -123,7 +123,7 @@ if($_SESSION['group'] == 'klient') {
                         <b>Uwagi inwestora</b>
                     </th>
                     <th class="clientside">
-
+                        Link
                     </th>
                     <th>
                         <b>Status</b>
@@ -234,8 +234,8 @@ if($_SESSION['group'] == 'klient') {
 
                 <!-- DANE -->
                 <template v-for="(elem,index) in filtered" >      
-                    <tr :class="{'wykonana':elem.status == 'wykonana'}">
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length">#{{elem.id}}</td>
+                    <tr :class="{'wykonana':elem.status == 'wykonana' , 'separator': shouldAddSeparator(index) }">
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="copyvalues(elem)" style="cursor:pointer">#{{elem.usterka_numer}}</td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'lokal')">
                             <span v-if="!elem.editable"> {{elem.lokal}}</span>
@@ -359,7 +359,11 @@ if($_SESSION['group'] == 'klient') {
                         <td></td>
                         <td></td>
                         <td></td> -->
-                        <td class="clientside">link</td>
+                        <td class="clientside">
+                            <a v-if="ext.link":href="ext.link" target="_blank">link</a>
+                            <input :id="ext.id+'link'" v-if="!ext.link" type="text" v-model="ext.link" @change="updateAuto(elem,'link','extra')" style="width:100px" @blur.stop="ext.editable = false">
+
+                        </td>
                         <td @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}"> 
                             <span v-if="!elem.editable">{{ext.status}}</span>
                             <select name="" :id="ext.id+'status'"  v-model="ext.status" :disabled="user.group == 'klient'"
@@ -496,8 +500,7 @@ if($_SESSION['group'] == 'klient') {
     </div>
 
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
 
@@ -507,3 +510,7 @@ if($_SESSION['group'] == 'klient') {
 </body>
 
 </html>
+
+
+    <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> -->

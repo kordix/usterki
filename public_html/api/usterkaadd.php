@@ -20,6 +20,7 @@ $dane = json_decode(file_get_contents('php://input'));
 
 $allowed = ['usterka_id','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
 
+
 $pytajniki = '';
 
 $kwerenda = '';
@@ -40,7 +41,8 @@ foreach ($allowed as $key) {
 $kolumnystring = substr($kolumnystring, 0, -1);
 $pytajniki = substr($pytajniki, 0, -1);
 
-$query = "INSERT INTO usterki ($kolumnystring , created_at ) values ($pytajniki , NOW()) ";
+
+$query = "INSERT INTO usterki ($kolumnystring , created_at , usterka_numer ) values ($pytajniki , NOW(), (SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id =  $dane->project_id limit 1) ) ";
 echo $query;
 $sth = $dbh->prepare($query);
 print_r($wartosci);

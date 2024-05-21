@@ -24,7 +24,8 @@ if(isset($_SESSION['zalogowany'])) {
 <div id="app" class="container">
 
 
-<p><b>Zgłoszenia serwisowe - panel administracyjny</b></p>
+
+<p><b>Usterki lokatorskie - panel administracyjny</b></p>
 
 
 <label for="">Login</label>

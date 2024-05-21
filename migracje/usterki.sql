@@ -26,3 +26,6 @@ CREATE TABLE usterki (
     link text,
     INDEX idx_project_id(project_id)
 )
+
+ALTER TABLE usterki
+ADD COLUMN usterka_numer INT;

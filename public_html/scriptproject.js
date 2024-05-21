@@ -62,6 +62,14 @@ Vue.createApp({
 
     },
     methods: {
+        shouldAddSeparator(index){
+            // console.log('dupa');
+            if (index === 0) return false; // Nie dodaj separatora przed pierwszym elementem
+            if (this.usterki[index].lokal !== this.usterki[index - 1].lokal){
+                console.log('DUPA');
+            }
+            return this.usterki[index].lokal !== this.usterki[index - 1].lokal;
+        },
 
         setPlany() {
             let self = this;
@@ -213,7 +221,18 @@ Vue.createApp({
         async usunExtra(id) {
             await axios.get('api/usterkaextradelete.php?id=' + id);
             location.reload();
+        },
+        copyvalues(elem){
+            this.form.adres = elem.adres;
+            this.form.nr_admin = elem.nr_admin;
+            this.form.adres_admin = elem.adres_admin;
+
+            this.form.lokal = elem.lokal;
+            this.form.kontakt_klient = elem.kontakt_klient;
         }
+
+
+        
     },
     computed: {
         filtered: function () {
