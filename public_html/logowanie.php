@@ -23,9 +23,9 @@ if(isset($_SESSION['zalogowany'])) {
 
 <div id="app" class="container">
 
-
-
-<p><b>Usterki lokatorskie - panel administracyjny</b></p>
+<img src="https://bertrand.pl/wp-content/uploads/2023/11/logo_pl_anniversary.png" alt="" style="max-width:250px">
+<br><br>
+<p style="font-size:22px"><b>Usterki lokatorskie - panel administracyjny</b></p>
 
 
 <label for="">Login</label>

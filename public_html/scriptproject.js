@@ -106,6 +106,9 @@ Vue.createApp({
         deleteusterka() {
             axios.get('api/usterkadelete.php?id=' + this.form.id).then((res) => location.reload())
         },
+        hideUsterka() {
+            axios.get('api/usterkahide.php?id=' + this.form.id).then((res) => location.reload())
+        },
         generateMap() {
             let self = this;
             map = L.map('map', {
@@ -218,6 +221,14 @@ Vue.createApp({
             await axios.get('api/usterkadelete.php?id=' + id);
             location.reload();
         },
+        async hide(id,reveal) {
+            if(reveal){
+                await axios.get('api/usterkareveal.php?id=' + id);
+            }else{
+                await axios.get('api/usterkahide.php?id=' + id);
+            }
+            location.reload();
+        },
         async usunExtra(id) {
             await axios.get('api/usterkaextradelete.php?id=' + id);
             location.reload();
@@ -295,6 +306,10 @@ Vue.createApp({
 
             if (this.filtry.status) {
                 filtered = filtered.filter((el) => el.status.toLowerCase().indexOf(self.filtry.status.toLowerCase()) > -1)
+            }
+
+            if(this.user.group != 'admin'){
+                filtered = filtered.filter((el)=>!el.hidden);
             }
 
 

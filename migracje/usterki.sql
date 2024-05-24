@@ -29,3 +29,6 @@ CREATE TABLE usterki (
 
 ALTER TABLE usterki
 ADD COLUMN usterka_numer INT;
+
+ALTER TABLE usterki
+ADD COLUMN `hidden` varchar(1) default '';

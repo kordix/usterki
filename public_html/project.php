@@ -235,7 +235,11 @@ if($_SESSION['group'] == 'klient') {
                 <!-- DANE -->
                 <template v-for="(elem,index) in filtered" >      
                     <tr :class="{'wykonana':elem.status == 'wykonana' , 'separator': shouldAddSeparator(index) }">
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="copyvalues(elem)" style="cursor:pointer">#{{elem.usterka_numer}}</td>
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="copyvalues(elem)" style="cursor:pointer">
+                        <span v-if="elem.hidden" style="font-weight:bold">*</span>
+                        <span v-else>#</span>
+                        {{elem.usterka_numer}}
+                        </td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'lokal')">
                             <span v-if="!elem.editable"> {{elem.lokal}}</span>
@@ -340,8 +344,13 @@ if($_SESSION['group'] == 'klient') {
                         </td>
                         <td style="width:150px">
                             <div style="display:flex;flex-wrap:no-wrap">
-                                <button class="btn-sm btn-danger" @click="usun(elem.id)" style="display:inline-block;margin-right:5px">Usuń</button>
-                                <button @click="addExtra(elem.id)" style="display:inline-block" :disabled="user.group == 'klient'">+</button>
+                                <button class="btn-sm btn-danger" @click="usun(elem.id)" style="display:inline-block;margin-right:5px"><i class="bi bi-trash"></i></button>
+                                <button @click="addExtra(elem.id)" style="display:inline-block;margin-right:5px" :disabled="user.group == 'klient'">+</button>
+                                <button class="btn-sm btn-warning" @click="hide(elem.id)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && !elem.hidden"><i class="bi bi-eye-slash"></i></button>
+                                <button class="btn-sm btn-warning" @click="hide(elem.id,true)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && elem.hidden"><i class="bi bi-eye"></i></button>
+                                
+
+                                
                             </div>
                         </td>
 

@@ -14,7 +14,8 @@ Vue.createApp({
                 adres:''
             },
             rights:[],
-            users:[]
+            users:[],
+            crudmode:'add'
         }
     },
     async mounted() {
@@ -36,6 +37,9 @@ Vue.createApp({
         save(){
             axios.post('/api/projectadd.php', this.form).then((res) => location.reload());
         },
+        update(){
+            axios.post('/api/projectupdate.php', { dane: this.form, id: this.form.id }).then((res) => location.reload());;
+        },
         deleteproject(){
             axios.get('/api/projectdelete.php?id=' + this.activeproject).then((res) => location.reload())
         },
@@ -46,6 +50,13 @@ Vue.createApp({
             axios.get('api/rightadd.php?userid='+this.useradd+'&projectid='+this.activeproject).then((res)=>{
                 location.reload()
             })
+        },
+        edit(elem){
+            this.formbool = true;
+            this.crudmode = 'edit';
+
+            this.form = elem;
+
         }
 
     },

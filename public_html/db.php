@@ -15,8 +15,6 @@ try {
     $query_run = $dbh->prepare("SET NAMES utf8");
     $query_run->execute();
 } catch(PDOException $exception) {
-    // http_response_code(400);
-    // return http_response_code(500);
     echo 'NOCONNECTION';
     return;
     //  echo "Connection error: " . $exception->getMessage();

@@ -26,27 +26,44 @@ if(!isset($_SESSION['zalogowany'])) {
     " rel="stylesheet">
 
     <meta name="robots" content="noindex">
+<style>
+    body{
+        font-size:16px;
+    }
+</style>
+
+
 </head>
 
 <body>
 
     <div id="app" class="container">
+        <br>
+        <img src="https://bertrand.pl/wp-content/uploads/2023/11/logo_pl_anniversary.png" alt="" style="max-width:250px">
+        <br><br>
+        
         <div v-if="user"><span>Zalogowany: {{user.login}} <a href="./api/logout.php"> <button>Wyloguj</button></a> &nbsp; &nbsp; &nbsp;</span></div>
         <button @click="deleteproject" v-if="activeproject">Usuń projekt</button>
 
         <div style="display:flex">
             <div>
-                <h2>PROJEKTY</h2>
+                <h2>USTERKI LOKATORSKIE - ZESTAWIENIE PROJEKTÓW</h2>
                 <div>
-                    <table>
-                        <tr>
-                            <td>id</td>
-                            <td>Nazwa projektu</td>
-                            <td>Adres</td>
-                            <td v-if="user.group == 'admin'">Użytkownicy</td>
-       
-                            <td>Data </td>
-                        </tr>
+                    <table style="font-size:14px">
+                        
+                            <tr style="font-weight:bold">
+                                <td>id</td>
+                                <td>Nazwa projektu</td>
+                                <td>Adres</td>
+                                <td v-if="user.group == 'admin'">Użytkownicy</td>
+                                <td>Inwestor</td>
+                                <td>Project manager</td>
+                                <td>Handlowiec</td>
+                                <td>Przedstawiciel budowy</td>
+        
+                                <td>Data </td>
+                            </tr>
+                      
                         <tr v-for="elem in projekty" style="cursor:pointer" @click="activeproject = elem.id"
                             :class="{'highlight':elem.id == activeproject}">
                             <td>#{{elem.id}}</td>
@@ -55,10 +72,26 @@ if(!isset($_SESSION['zalogowany'])) {
                             <td v-if="user.group == 'admin'">
                                 <span v-for="el in rights.filter((el)=>el.project_id == elem.id)">{{el.login}} &nbsp;</span>    
                             </td>
+                            <td>
+                                {{elem.inwestor}}
+                            </td>
+                            <td>
+                                {{elem.project_manager}}
+                            </td>
+                             <td>
+                                {{elem.handlowiec}}
+                            </td>
+                            <td>
+                                {{elem.przedstawiciel}}
+                            </td>
+                   
                    
                             <td>{{elem.created_at}}</td>
                        
-                            <td><a :href="'/project.php?id='+elem.id"> <button @click="preview(elem.id)">Wejdź</button></a></td>
+                            <td><a :href="'/project.php?id='+elem.id"> <button class="btn btn-primary" @click="preview(elem.id)"><i class="bi bi-box-arrow-in-left"></i> Wejdź</button></a></td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" @click="edit(elem)"> <i class="bi bi-pen"></i></button>
+                            </td>
                         </tr>
                     </table>
 
@@ -97,7 +130,30 @@ if(!isset($_SESSION['zalogowany'])) {
                 <input type="text" v-model="form.adres">
             </div>
 
-            <button @click="save">Zapisz </button>
+            <div class="form-group">
+                <label for="">Inwestor</label>
+                <input type="text" v-model="form.inwestor">
+            </div>
+
+             <div class="form-group">
+                <label for="">Project manager</label>
+                <input type="text" v-model="form.project_manager">
+            </div>
+
+            <div class="form-group">
+                <label for="">Handlowiec</label>
+                <input type="text" v-model="form.handlowiec">
+            </div>
+
+            <div class="form-group">
+                <label for="">Przedstawiciel budowy</label>
+                <input type="text" v-model="form.przedstawiciel">
+            </div>
+
+
+            <button @click="save" v-if="crudmode == 'add'">Zapisz </button>
+            <button @click="update" v-if="crudmode == 'edit'">Zapisz zmiany </button>
+
 
         </div>  
     </div>
