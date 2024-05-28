@@ -18,7 +18,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 $dane = json_decode(file_get_contents('php://input'));
 
-$allowed = ['usterka_id','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
+$allowed = ['nr_oferty','usterka_id','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y','hidden'];
 
 
 $pytajniki = '';
@@ -41,9 +41,16 @@ foreach ($allowed as $key) {
 $kolumnystring = substr($kolumnystring, 0, -1);
 $pytajniki = substr($pytajniki, 0, -1);
 
+print_r($dane);
 
-$query = "INSERT INTO usterki ($kolumnystring , created_at , usterka_numer ) values ($pytajniki , NOW(), (SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id =  $dane->project_id limit 1) ) ";
-echo $query;
+$numerquery = "(SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id = $dane->project_id and hidden = 0 limit 1)";
+
+if($dane->hidden == 1){
+    $numerquery = "(SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id = $dane->project_id and hidden = 1 limit 1)";
+}
+
+
+$query = "INSERT INTO usterki ($kolumnystring , created_at , usterka_numer ) values ($pytajniki , NOW(), $numerquery ) ";
 $sth = $dbh->prepare($query);
 print_r($wartosci);
 $sth->execute($wartosci);

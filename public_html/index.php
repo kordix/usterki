@@ -57,7 +57,7 @@ if(!isset($_SESSION['zalogowany'])) {
                                 <td>Adres</td>
                                 <td v-if="user.group == 'admin'">Użytkownicy</td>
                                 <td>Inwestor</td>
-                                <td>Project manager</td>
+                                <td>Product manager</td>
                                 <td>Handlowiec</td>
                                 <td>Przedstawiciel budowy</td>
         
@@ -89,7 +89,7 @@ if(!isset($_SESSION['zalogowany'])) {
                             <td>{{elem.created_at}}</td>
                        
                             <td><a :href="'/project.php?id='+elem.id"> <button class="btn btn-primary" @click="preview(elem.id)"><i class="bi bi-box-arrow-in-left"></i> Wejdź</button></a></td>
-                            <td>
+                            <td v-if="user.group =='admin'">
                                 <button class="btn btn-sm btn-warning" @click="edit(elem)"> <i class="bi bi-pen"></i></button>
                             </td>
                         </tr>

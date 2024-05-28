@@ -11,7 +11,7 @@ if(!isset($_SESSION['zalogowany'])) {
 require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 
-$allowed = ['link','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','SPW','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
+$allowed = ['nr_oferty','link','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','SPW','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
 
 
 //replace

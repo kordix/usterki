@@ -69,9 +69,7 @@ if($_SESSION['group'] == 'klient') {
 
 
 
-    <p id="projectid" style="display:none">
-        <?php echo $_GET['id'] ?>
-    </p>
+    <p id="projectid" style="display:none"><?php echo $_GET['id'] ?></p>
 
     <input type="hidden" value="<?php echo $_SESSION['id']; ?>" id="userid">
 
@@ -99,12 +97,12 @@ if($_SESSION['group'] == 'klient') {
             <table id="usterkitable">
                 <!-- NAGŁÓWEK -->
                 <tr>
-                    <th>id</td>
+                    <th @click="sortuj('id')" style="cursor:pointer">id</td>
                     <th style="width:140px">
                         Data zgłoszenia
                     </th>
                   
-                    <th style="width:20px">
+                    <th style="width:20px;cursor:pointer" @click="sortuj('lokal')">
                         Nr budowlany
                     </th>
                     <th>
@@ -130,6 +128,10 @@ if($_SESSION['group'] == 'klient') {
                     </th>
                     <th style="width:300px">
                         <b>Komentarz serwisu</b>
+                    </th>
+
+                    <th>
+                        Nr oferty
                     </th>
                    
                     <th>
@@ -212,6 +214,9 @@ if($_SESSION['group'] == 'klient') {
                     <th>
                         <input type="text" v-model="filtry.komentarz_serwisu" style="width:95%">
                     </th>
+                      <th>
+                        <input type="text" v-model="filtry.nr_oferty">
+                    </th>
                 
                     <th>
                         <input type="text" v-model="filtry.SPW">
@@ -234,7 +239,7 @@ if($_SESSION['group'] == 'klient') {
 
                 <!-- DANE -->
                 <template v-for="(elem,index) in filtered" >      
-                    <tr :class="{'wykonana':elem.status == 'wykonana' , 'separator': shouldAddSeparator(index) }">
+                    <tr :class="{'wykonana':elem.status == 'wykonana' , 'separator': shouldAddSeparator(index) , 'hiddenrow':elem.hidden }">
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="copyvalues(elem)" style="cursor:pointer">
                         <span v-if="elem.hidden" style="font-weight:bold">*</span>
                         <span v-else>#</span>
@@ -313,6 +318,10 @@ if($_SESSION['group'] == 'klient') {
                             <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
                             <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
                         </td>
+                        <td @click="handleChange(elem,'nr_oferty')" :class="{disabledcursor:user.group == 'klient'}">
+                            <span v-if="!elem.editable"> {{elem.nr_oferty}}</span>
+                            <input :id="elem.id+'nr_oferty'" v-else  v-model="elem.nr_oferty" @change="updateAuto(elem,'nr_oferty')" @blur="elem.editable = false">
+                        </td>
                         <td @click="handleChange(elem,'SPW')" :class="{disabledcursor:user.group == 'klient'}">
                             <span v-if="!elem.editable"> {{elem.SPW}}</span>
                             <input :id="elem.id+'SPW'" v-else  v-model="elem.SPW" @change="updateAuto(elem,'SPW')" @blur="elem.editable = false">
@@ -346,7 +355,7 @@ if($_SESSION['group'] == 'klient') {
                             <div style="display:flex;flex-wrap:no-wrap">
                                 <button class="btn-sm btn-danger" @click="usun(elem.id)" style="display:inline-block;margin-right:5px"><i class="bi bi-trash"></i></button>
                                 <button @click="addExtra(elem.id)" style="display:inline-block;margin-right:5px" :disabled="user.group == 'klient'">+</button>
-                                <button class="btn-sm btn-warning" @click="hide(elem.id)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && !elem.hidden"><i class="bi bi-eye-slash"></i></button>
+                                <!-- <button class="btn-sm btn-warning" @click="hide(elem.id)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && !elem.hidden"><i class="bi bi-eye-slash"></i></button> -->
                                 <button class="btn-sm btn-warning" @click="hide(elem.id,true)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && elem.hidden"><i class="bi bi-eye"></i></button>
                                 
 
@@ -412,8 +421,12 @@ if($_SESSION['group'] == 'klient') {
                 </template>
                 <!-- DODAWANIE -->
                 <tr id="addformtable" class="addrow">
-                    <td><button class="btn btn-primary" style="padding:2px" @click="save"
-                            v-if="crudmode == 'add' && form.lokal" ><i class="bi bi-floppy"></i></button><span v-else>+</span>
+                    <td><template v-if="crudmode == 'add' && form.lokal" > 
+                            <button @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
+                            <button @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group == 'admin'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
+
+                        </template>
+                            <span v-else>+</span>
                        
                     </td>
                     <td></td>
@@ -464,6 +477,9 @@ if($_SESSION['group'] == 'klient') {
                     </td>
                     <td>
                         <textarea style="width:400px"  v-model="form.komentarz_serwisu" :disabled="user.group == 'klient'">></textarea>
+                    </td>
+                    <td>
+                        <input  v-model="form.nr_oferty" style="width:100px" :disabled="user.group == 'klient'">
                     </td>
                     <td>
                         <input  v-model="form.SPW" style="width:100px" :disabled="user.group == 'klient'">

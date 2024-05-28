@@ -4,7 +4,7 @@ Vue.createApp({
     data() {
         return {
             user: {},
-            sortkey: null,
+            sortkey: '',
             filtry: {
                 id: null,
                 opis_niezgodnosci: null
@@ -26,7 +26,7 @@ Vue.createApp({
             activeproject: null,
             messages: [],
             searchbufor: '',
-            sortorder: null,
+            sortorder: 1,
             formbool: false,
             form: {
                 id: 0,
@@ -62,13 +62,18 @@ Vue.createApp({
 
     },
     methods: {
-        shouldAddSeparator(index){
+        shouldAddSeparator(index) {
+            // return false;
             // console.log('dupa');
-            if (index === 0) return false; // Nie dodaj separatora przed pierwszym elementem
-            if (this.usterki[index].lokal !== this.usterki[index - 1].lokal){
-                console.log('DUPA');
+            if (this.sortkey == 'lokal') {
+                if (index === 0) return false; // Nie dodaj separatora przed pierwszym elementem
+                if (this.usterki[index].lokal !== this.usterki[index - 1].lokal) {
+                    console.log('DUPA');
+                }
+                return this.usterki[index].lokal !== this.usterki[index - 1].lokal;
+            } else {
+                return false;
             }
-            return this.usterki[index].lokal !== this.usterki[index - 1].lokal;
         },
 
         setPlany() {
@@ -188,10 +193,16 @@ Vue.createApp({
         test() {
             console.log('test');
         },
-        async save() {
+        async save(hidden) {
             let self = this;
             const id = document.querySelector('#projectid').innerHTML;
             this.form.project_id = id;
+            console.log(hidden);
+            if (hidden === true) {
+                this.form.hidden = 1;
+            } else {
+                this.form.hidden = '';
+            }
             await axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'));
             location.reload();
         },
@@ -221,10 +232,11 @@ Vue.createApp({
             await axios.get('api/usterkadelete.php?id=' + id);
             location.reload();
         },
-        async hide(id,reveal) {
-            if(reveal){
-                await axios.get('api/usterkareveal.php?id=' + id);
-            }else{
+        async hide(id, reveal) {
+            const projectid = document.querySelector('#projectid').innerHTML;
+            if (reveal) {
+                await axios.get('api/usterkareveal.php?id=' + id + '&projectid=' + projectid);
+            } else {
                 await axios.get('api/usterkahide.php?id=' + id);
             }
             location.reload();
@@ -233,17 +245,31 @@ Vue.createApp({
             await axios.get('api/usterkaextradelete.php?id=' + id);
             location.reload();
         },
-        copyvalues(elem){
+        copyvalues(elem) {
             this.form.adres = elem.adres;
             this.form.nr_admin = elem.nr_admin;
             this.form.adres_admin = elem.adres_admin;
 
             this.form.lokal = elem.lokal;
             this.form.kontakt_klient = elem.kontakt_klient;
+        },
+        sortuj(key) {
+            console.log(key);
+            if (key == this.sortkey) {
+                console.log('widzi to samo');
+                if (this.sortorder == 1) {
+                    this.sortorder = -1;
+                } else if (this.sortorder == -1) {
+                    this.sortorder = 1;
+                }
+            } else {
+                this.sortkey = key;
+            }
+
         }
 
 
-        
+
     },
     computed: {
         filtered: function () {
@@ -259,18 +285,7 @@ Vue.createApp({
                     })
                 })
             }
-            if (this.sortkey) {
 
-                filtered = filtered.sort(function (a, b) {
-                    console.log(self.sortkey);
-
-                    var a = a[self.sortkey];
-                    var b = b[self.sortkey];
-
-                    // Compare the 2 dates
-                    return (a === b ? 0 : a > b ? 1 : -1) * sortorder;
-                })
-            }
 
             if (this.filtry.opis_niezgodnosci) {
                 filtered = filtered.filter((el) => el.opis_niezgodnosci.toLowerCase().indexOf(self.filtry.opis_niezgodnosci.toLowerCase()) > -1)
@@ -308,8 +323,20 @@ Vue.createApp({
                 filtered = filtered.filter((el) => el.status.toLowerCase().indexOf(self.filtry.status.toLowerCase()) > -1)
             }
 
-            if(this.user.group != 'admin'){
-                filtered = filtered.filter((el)=>!el.hidden);
+            if (this.user.group != 'admin') {
+                filtered = filtered.filter((el) => !el.hidden);
+            }
+
+            if (this.sortkey) {
+                filtered = filtered.sort(function (a, b) {
+                    console.log(self.sortkey);
+
+                    var a = a[self.sortkey];
+                    var b = b[self.sortkey];
+
+                    // Compare the 2 dates
+                    return (a === b ? 0 : a > b ? 1 : -1) * sortorder;
+                })
             }
 
 

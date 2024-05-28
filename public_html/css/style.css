@@ -76,7 +76,7 @@ td , th{
     border-color: lightgray lightgray black;
     border-image: initial;
     border-spacing: 0px;
-    background: white;
+    /* background: white; */
     color: black;
     font-family: Roboto, Arial, sans-serif;
 }
@@ -179,4 +179,18 @@ th{
   .separator{
     
     /* border:2px red solid; */
+  }
+
+  .hiddenrow > td{
+    color:#999 !important;
+  }
+
+  table tr:nth-child(odd) {
+    background-color: white;
+      /* Kolor dla nieparzystych wierszy */
+  }
+
+  tbody > tr:nth-child(even) {
+            background-color: #f2f2f2;
+      /* Kolor dla parzystych wierszy */
   }
