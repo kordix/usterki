@@ -84,6 +84,9 @@ Vue.createApp({
             }, 150)
         },
         handleChange(elem, kolumna, tabela) {
+            if (['opis_niezgodnosci'].indexOf(kolumna) >= 0 ){
+                return;
+            }
             if (this.user.group == 'klient') {
                 if (['status', 'komentarz_serwisu', 'SPW', 'termin_zgloszenia', 'klasyfikacja'].indexOf(kolumna) > -1) {
                     return
