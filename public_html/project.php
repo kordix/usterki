@@ -316,7 +316,7 @@ if($_SESSION['group'] == 'klient') {
 
                         <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
                             <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
-                            <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
+                            <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur="elem.editable = false"></textarea>
                         </td>
                         <td @click="handleChange(elem,'nr_oferty')" :class="{disabledcursor:user.group == 'klient'}">
                             <span v-if="!elem.editable"> {{elem.nr_oferty}}</span>

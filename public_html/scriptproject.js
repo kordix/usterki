@@ -92,14 +92,21 @@ Vue.createApp({
                     return
                 }
             }
+
+            if (this.user.group == 'admin') {
+                if (['typ_niezgodnosci', 'opis_niezgodnosci', 'adres_admin', 'nr_admin', 'kontakt_klient', 'data_klient','uwagi_inwestora'].indexOf(kolumna) > -1) {
+                    return
+                }
+            }
+
             elem.editable = true;
             console.log(elem.id + kolumna);
             setTimeout(() => {
-                if (kolumna != 'komentarz_serwisu') {
+                // if (kolumna != 'komentarz_serwisu') {
                     if (document.getElementById(elem.id + kolumna)) {
-                        document.getElementById(elem.id + kolumna).focus();
+                       document.getElementById(elem.id + kolumna).focus();
                     }
-                }
+                // }
             }, 100);
 
         },
