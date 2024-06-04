@@ -27,3 +27,5 @@ CREATE TABLE extras (
     link text,
     INDEX idx_project_id(project_id)
 )
+
+ALTER TABLE extras add column extra_numer varchar(10);

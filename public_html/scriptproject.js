@@ -276,6 +276,15 @@ Vue.createApp({
                 this.sortkey = key;
             }
 
+        },
+        upload(id){
+            const formData = new FormData;
+            formData.append('file', document.querySelector('#fileToUpload').files[0]);
+            formData.append('description','');
+            formData.append('usterka_id', id);
+
+
+            fetch('/api/upload3.php', {method:'POST',body:formData});
         }
 
 

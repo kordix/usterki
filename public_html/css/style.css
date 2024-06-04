@@ -194,3 +194,7 @@ th{
             background-color: #f2f2f2;
       /* Kolor dla parzystych wierszy */
   }
+
+  [v-cloak] {
+      display: none;
+  }

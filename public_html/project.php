@@ -51,7 +51,7 @@ if($_SESSION['group'] == 'klient') {
     <link rel="icon" href="data:;base64,=">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usterki</title>
+    <title>Usterki lokatorskie</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/mybootstrap.css">
 
@@ -65,9 +65,9 @@ if($_SESSION['group'] == 'klient') {
 
 </head>
 
-<body>
+<body >
 
-
+    <div v-cloak> 
 
     <p id="projectid" style="display:none"><?php echo $_GET['id'] ?></p>
 
@@ -293,6 +293,9 @@ if($_SESSION['group'] == 'klient') {
                         </td>
 
                         <td class="clientside">
+                                <!-- <label for=""> Dodaj plik:</label>
+            <input type="file" name="file" id="fileToUpload">
+            <button @click="upload(elem.id)">upload</button> -->
                             <a v-if="elem.link":href="elem.link" target="_blank">link</a>
                             <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false">
                         </td>
@@ -413,6 +416,9 @@ if($_SESSION['group'] == 'klient') {
                         </td>
                         <td>
                             
+                        </td>
+                        <td>
+                            
                                 <button class="btn-sm btn-danger" @click="usunExtra(ext.id)" style="display:inline-block;margin-right:5px">Usuń</button>
                             
 
@@ -513,6 +519,10 @@ if($_SESSION['group'] == 'klient') {
 
     </div>
 
+     <div class="mb-2">
+     
+    </div>
+
 
     <div class="container" v-show="activesection == 'plany'">
 
@@ -524,6 +534,8 @@ if($_SESSION['group'] == 'klient') {
 
     </div>
 
+      </div>
+
 
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -532,6 +544,8 @@ if($_SESSION['group'] == 'klient') {
     <script src="scriptproject.js">
 
     </script>
+
+  
 </body>
 
 </html>

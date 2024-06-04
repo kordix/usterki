@@ -15,7 +15,7 @@ if(!isset($_SESSION['zalogowany'])) {
     <meta charset="UTF-8">
     <link rel="icon" href="data:;base64,=">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Usterki lokatorskie</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/mybootstrap.css">
 
@@ -35,9 +35,9 @@ if(!isset($_SESSION['zalogowany'])) {
 
 </head>
 
-<body>
+<body >
 
-    <div id="app" class="container">
+    <div id="app" class="container" v-cloak>
         <br>
         <img src="https://bertrand.pl/wp-content/uploads/2023/11/logo_pl_anniversary.png" alt="" style="max-width:250px">
         <br><br>
