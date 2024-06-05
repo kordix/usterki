@@ -54,6 +54,8 @@ if($_SESSION['group'] == 'klient') {
     <title>Usterki lokatorskie</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/mybootstrap.css">
+    <link rel="stylesheet" href="/css/lightbox.css">
+
 
     <meta name="robots" content="noindex">
 
@@ -120,7 +122,7 @@ if($_SESSION['group'] == 'klient') {
                     <th >
                         <b>Uwagi inwestora</b>
                     </th>
-                    <th class="clientside">
+                    <th class="clientside" >
                         Link
                     </th>
                     <th>
@@ -284,7 +286,7 @@ if($_SESSION['group'] == 'klient') {
 
                         </td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')">
-                            <span v-if="!elem.editable"> {{elem.opis_niezgodnosci}}</span>
+                            <span v-if="!elem.editable">  {{elem.opis_niezgodnosci}}</span>
                             <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
                         </td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" >
@@ -293,11 +295,18 @@ if($_SESSION['group'] == 'klient') {
                         </td>
 
                         <td class="clientside">
-                                <!-- <label for=""> Dodaj plik:</label>
-            <input type="file" name="file" id="fileToUpload">
-            <button @click="upload(elem.id)">upload</button> -->
-                            <a v-if="elem.link":href="elem.link" target="_blank">link</a>
-                            <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false">
+                            
+                            <!-- <a v-if="elem.link":href="elem.link" target="_blank">link</a>
+                            <input :id="elem.id+'link'" v-if="!elem.link" type="text" v-model="elem.link" @change="updateAuto(elem,'link')" style="width:100px" @blur.stop="elem.editable = false"> -->
+
+                            <div style="display:flex;justify-content:flex-between;width:100px">
+                                <div>
+                                    <a v-for="file in files.filter((el)=>el.usterka_id == elem.id)" target="_blank" :href="/uploads/+file.filename"> <i style="font-size:20px" class="bi bi-file-arrow-down"></i> </a>
+                                </div>
+                                <i class="bi bi-cloud-arrow-up" style="display:inline-block;font-size:20px;margin-left:auto;cursor:pointer" @click="showAttachments(elem.id)"></i>
+
+                            </div>
+
                         </td>
 
                         <!-- SERWIS -->
@@ -318,7 +327,7 @@ if($_SESSION['group'] == 'klient') {
                         </td>
 
                         <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
-                            <span v-if="!elem.editable"> {{elem.komentarz_serwisu}}</span>
+                            <span v-if="!elem.editable">  <b v-if="extras.filter(el=>el.usterka_id == elem.id).length"> {{elem.usterka_numer}}.1</b> {{elem.komentarz_serwisu}}</span>
                             <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur="elem.editable = false"></textarea>
                         </td>
                         <td @click="handleChange(elem,'nr_oferty')" :class="{disabledcursor:user.group == 'klient'}">
@@ -381,8 +390,9 @@ if($_SESSION['group'] == 'klient') {
                         <td></td>
                         <td></td> -->
                         <td class="clientside">
-                            <a v-if="ext.link":href="ext.link" target="_blank">link</a>
-                            <input :id="ext.id+'link'" v-if="!ext.link" type="text" v-model="ext.link" @change="updateAuto(elem,'link','extra')" style="width:100px" @blur.stop="ext.editable = false">
+                            
+                            <!-- <a v-if="ext.link":href="ext.link" target="_blank">link</a> -->
+                            <!-- <input :id="ext.id+'link'" v-if="!ext.link" type="text" v-model="ext.link" @change="updateAuto(elem,'link','extra')" style="width:100px;" @blur.stop="ext.editable = false"> -->
 
                         </td>
                         <td @click="handleChange(elem,'status')" :class="{disabledcursor:user.group == 'klient'}"> 
@@ -402,7 +412,7 @@ if($_SESSION['group'] == 'klient') {
 
 
                         <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
-                            <span v-if="!elem.editable"> {{ext.komentarz_serwisu}}</span>
+                            <span v-if="!elem.editable"><b> {{usterki.find((el)=>el.id == ext.usterka_id).usterka_numer }}.{{ext.extra_numer}} </b>  {{ext.komentarz_serwisu}}</span>
                             <textarea :id="ext.id+'komentarz_serwisu'" v-else  v-model="ext.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(ext,'komentarz_serwisu','extra')" style="width:95%" @blur.stop="elem.editable = false"></textarea>
                         </td>
                         <td>
@@ -519,8 +529,19 @@ if($_SESSION['group'] == 'klient') {
 
     </div>
 
-     <div class="mb-2">
-     
+   <div class="lightbox" id="attachmentslightbox" :class="{active:attachmentsbool}">
+        <div style="background:white;width:90%;border-radius:5px;padding:20px;">
+            <p style="color:red" v-if="loadingfile">Ładowanie...</p>
+            <label for=""> Dodaj plik:</label>
+            <input type="file" name="file" id="fileToUpload">
+            <button @click="upload()">upload</button>
+
+            <br> <br>
+            
+            <p v-for="message in attachmentmessages">{{message}}</p>
+
+            <button @click="attachmentsbool = ! attachmentsbool" class="btn btn-danger">x Zamknij</button>
+        </div>
     </div>
 
 

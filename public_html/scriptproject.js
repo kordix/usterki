@@ -47,7 +47,12 @@ Vue.createApp({
                     klasyfikacja: ''
 
                 }
-            ]
+            ],
+            files:[],
+            attachmentsbool:false,
+            activeusterka:null,
+            attachmentmessages:[],
+            loadingfile:false
         }
     },
     async mounted() {
@@ -58,6 +63,9 @@ Vue.createApp({
         await axios.get('api/extras.php?id=' + id).then((res) => self.extras = res.data);
 
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
+        await axios.get('api/files.php?projectid=' + id).then((res) => self.files = res.data);
+
+
 
 
     },
@@ -226,6 +234,8 @@ Vue.createApp({
                 komentarz_serwisu: 'NOWA RZECZ'
             };
             await axios.post('api/extraadd.php', extraform).then((res) => location.reload());
+
+                
         },
         update(id) {
             let self = this;
@@ -277,14 +287,31 @@ Vue.createApp({
             }
 
         },
-        upload(id){
+        async upload(){
+            this.loadingfile = true;
+            this.attachmentmessages = [];
+            this.attachmentprompt = false;
+            let self = this;
+            const id = document.querySelector('#projectid').innerHTML;
+
             const formData = new FormData;
             formData.append('file', document.querySelector('#fileToUpload').files[0]);
             formData.append('description','');
-            formData.append('usterka_id', id);
+            formData.append('usterka_id', this.activeusterka);
 
 
-            fetch('/api/upload3.php', {method:'POST',body:formData});
+            await fetch('/api/upload3.php', {method:'POST',body:formData});
+            this.loadingfile = false;
+
+            this.attachmentmessages.push('PLIK ZOSTAŁ WRZUCONY MOŻESZ ZAMKNĄĆ OKNO');
+
+            await axios.get('api/files.php?projectid=' + id).then((res) => self.files = res.data);
+
+        },
+        showAttachments(id){
+            this.attachmentmessages = [];
+            this.attachmentsbool = true;
+            this.activeusterka = id;
         }
 
 

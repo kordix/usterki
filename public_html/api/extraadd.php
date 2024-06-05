@@ -41,10 +41,10 @@ $kolumnystring = substr($kolumnystring, 0, -1);
 $pytajniki = substr($pytajniki, 0, -1);
 
 
-$numerquery = "(SELECT IFNULL(MAX(extra_numer) + 1, 2) FROM extras WHERE usterka_id = $dane->usterka_id limit 1)";
+$numerquery = "(SELECT IFNULL(MAX(e.extra_numer) + 1, 2) FROM extras e WHERE e.usterka_id = $dane->usterka_id limit 1)";
 
 
-$query = "INSERT INTO extras ($kolumnystring , created_at ) values ($pytajniki , NOW()) ";
+$query = "INSERT INTO extras ($kolumnystring , created_at , extra_numer ) values ($pytajniki , NOW() , $numerquery) ";
 echo $query;
 $sth = $dbh->prepare($query);
 print_r($wartosci);
