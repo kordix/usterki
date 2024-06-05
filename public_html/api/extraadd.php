@@ -18,7 +18,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 $dane = json_decode(file_get_contents('php://input'));
 
-$allowed = ['usterka_id','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
+$allowed = ['nr_zlecenia','nr_pozycji','usterka_id','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
 
 $pytajniki = '';
 

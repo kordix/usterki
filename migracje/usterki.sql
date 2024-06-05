@@ -32,3 +32,6 @@ ADD COLUMN usterka_numer INT;
 
 ALTER TABLE usterki
 ADD COLUMN `hidden` varchar(1) default '';
+
+ALTER TABLE usterki
+ADD COLUMN `nr_pozycji` varchar(255) default '';

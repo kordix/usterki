@@ -122,6 +122,12 @@ if($_SESSION['group'] == 'klient') {
                     <th >
                         <b>Uwagi inwestora</b>
                     </th>
+                    <th>
+                        Nr zlecenia
+                    </th>
+                    <th>
+                        Nr pozycji
+                    </th>
                     <th class="clientside" >
                         Link
                     </th>
@@ -196,6 +202,12 @@ if($_SESSION['group'] == 'klient') {
                     </th>
                     <th >
                         <input type="text" v-model="filtry.uwagi_inwestora" style="width:95%">
+                    </th>
+                    <th>
+                        <input type="text" v-model="filtry.nr_zlecenia" style="width:95%">
+                    </th>
+                    <th>
+                        <input type="text" v-model="filtry.nr_pozycji" style="width:95%">
                     </th>
                     <th class="clientside">
 
@@ -292,6 +304,16 @@ if($_SESSION['group'] == 'klient') {
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" >
                             <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
                             <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
+                        </td>
+
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'nr_zlecenia')" >
+                            <span v-if="!elem.editable"> {{elem.nr_zlecenia}}</span>
+                            <input :id="elem.id+'nr_zlecenia'" v-else  v-model="elem.nr_zlecenia" @change="updateAuto(elem,'nr_zlecenia')" @blur.stop="elem.editable = false">
+                        </td>
+
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'nr_pozycji')" >
+                            <span v-if="!elem.editable"> {{elem.nr_pozycji}}</span>
+                            <input :id="elem.id+'nr_pozycji'" v-else  v-model="elem.nr_pozycji" @change="updateAuto(elem,'nr_pozycji')" @blur.stop="elem.editable = false">
                         </td>
 
                         <td class="clientside">
@@ -438,8 +460,8 @@ if($_SESSION['group'] == 'klient') {
                 <!-- DODAWANIE -->
                 <tr id="addformtable" class="addrow">
                     <td><template v-if="crudmode == 'add' && form.lokal" > 
-                            <button @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
-                            <button @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group == 'admin'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
+                            <button title="zapisz" @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
+                            <button title="zapisz jako ukryte" @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group == 'admin'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
 
                         </template>
                             <span v-else>+</span>
@@ -477,6 +499,12 @@ if($_SESSION['group'] == 'klient') {
                     </td>
                     <td>
                         <textarea v-model="form.uwagi_inwestora" style="width:150px"></textarea>
+                    </td>
+                    <td>
+                        <input  v-model="form.nr_zlecenia" style="width:100px">
+                    </td>
+                    <td>
+                        <input  v-model="form.nr_pozycji" style="width:100px">
                     </td>
                     <td class="clientside">
 
@@ -543,6 +571,11 @@ if($_SESSION['group'] == 'klient') {
             <button @click="attachmentsbool = ! attachmentsbool" class="btn btn-danger">x Zamknij</button>
         </div>
     </div>
+
+
+    <br><br>
+
+   
 
 
     <div class="container" v-show="activesection == 'plany'">
