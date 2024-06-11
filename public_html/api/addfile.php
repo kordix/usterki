@@ -33,7 +33,6 @@ foreach ($allowed as $key) {
 
 
     $query = "INSERT INTO files ($kolumnystring ) values ($pytajniki) ";
-    echo $query;
     $sth = $dbh->prepare($query);
     $sth->execute($wartosci);
 

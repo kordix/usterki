@@ -2,18 +2,16 @@
 
 session_start();
 
-echo $_SERVER['DOCUMENT_ROOT'];
 
 
 if(!isset($_SESSION['zalogowany'])){
-  //  return;
+  echo 'NIEZALOGOWANY';
+    return;
 }
 
 
 
-// echo $baseDir;
 
-echo 'fasdfdsa';
 
 function generujLosowaNazwe()
 {
@@ -40,29 +38,35 @@ $folder = 'upload';
 
 
 if ($file) {
-    echo 'COŚ WIDZ';
     $upload_dir = "../uploads/" . $folder . '/';
     @$filename = $_FILES['file']['name'];
     $uploadOk = 1;
 
     $check = getimagesize($_FILES["file"]["tmp_name"]);
     if ($check !== false) {
-        echo "Jest obrazek - " . $check["mime"] . ".";
+        // echo "Jest obrazek - " . $check["mime"] . ".";
         $uploadOk = 1;
 
         $uploadedFileExtension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 
+  
+
     } else {
-        echo "Plik nie jest obrazkiem. Mam nadzieję że nie chcesz przesłać jakiegoś syfu";
+        // echo "Plik nie jest obrazkiem. Mam nadzieję że nie chcesz przesłać jakiegoś syfu";
 
         $uploadedFileExtension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 
-        $allowedExtensions = array('txt', 'doc', 'docx','pdf');
+        $allowedExtensions = array('txt', 'doc', 'docx','pdf','xls','xlsx');
+
+           
 
         if (in_array($uploadedFileExtension, $allowedExtensions)) {
-            echo 'plik nie jest obrazkiem ale jest bezpieczny';
+
         } else {
-            echo 'plik nie jest bezpeiczny';
+
+            
+            echo('{"message":"Niedopuszczalne rozszerzenie. Dopuszczalne tylko obrazki oraz txt, doc, docx,pdf,xls,xlsx"}');
+
 
             $uploadOk = 0;
 
@@ -79,10 +83,6 @@ if ($file) {
 
     if($uploadOk) {
         sleep(2);
-        // echo dirname(__FILE__).'..'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$filename;
-        // echo realpath("C:\Users\BOBKOR.bertrand\Desktop\_kordi\PROJEKTY\bertrandusterki\\");
-
-        // echo realpath(dirname(__FILE__).'..'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$filename);
        
 
 
@@ -93,7 +93,10 @@ if ($file) {
 
         if (move_uploaded_file($file, $baseDir)) {
             // File was successfully uploaded
-            echo "File uploaded successfully: " . $target_path.$filename;
+
+            
+            echo('{"message":"Plik został zuploadowany"}');
+
 
             $dane = new stdClass();
             $dane->description = $_POST['description'];

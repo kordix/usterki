@@ -1,5 +1,8 @@
 let map;
 
+import writeExcelFile from 'https://cdn.jsdelivr.net/npm/write-excel-file@2.0.2/+esm';
+
+
 Vue.createApp({
     data() {
         return {
@@ -7,7 +10,10 @@ Vue.createApp({
             sortkey: '',
             filtry: {
                 id: null,
-                opis_niezgodnosci: null
+                opis_niezgodnosci: null,
+                kontakt_klient: null,
+                date_start: null,
+                date_end: null
             },
             mapwidth: 800,
             mapheight: 600,
@@ -48,11 +54,15 @@ Vue.createApp({
 
                 }
             ],
-            files:[],
-            attachmentsbool:false,
-            activeusterka:null,
-            attachmentmessages:[],
-            loadingfile:false
+            files: [],
+            attachmentsbool: false,
+            activeusterka: null,
+            attachmentmessages: [],
+            loadingfile: false,
+            excelinput: '',
+            deletedialogbool: false,
+            revealdialogbool: false
+
         }
     },
     async mounted() {
@@ -64,6 +74,23 @@ Vue.createApp({
 
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
         await axios.get('api/files.php?projectid=' + id).then((res) => self.files = res.data);
+
+        document.onkeydown = function (evt) {
+            evt = evt || window.event;
+
+            if (evt.key === "Escape" || evt.key === "Esc") {
+                evt.preventDefault();
+                if (self.attachmentsbool) {
+                    self.attachmentsbool = false;
+                }
+                else if (self.deletedialogbool) {
+                    self.deletedialogbool = false;
+                }
+            }
+        }
+
+        this.filtry.date_end = new Date().toISOString().split('T')[0];
+
 
 
 
@@ -92,7 +119,8 @@ Vue.createApp({
             }, 150)
         },
         handleChange(elem, kolumna, tabela) {
-            if (['opis_niezgodnosci'].indexOf(kolumna) >= 0 ){
+            console.log(elem);
+            if (['opis_niezgodnosci'].indexOf(kolumna) >= 0) {
                 return;
             }
             if (this.user.group == 'klient') {
@@ -102,7 +130,7 @@ Vue.createApp({
             }
 
             if (this.user.group == 'admin') {
-                if (['typ_niezgodnosci', 'opis_niezgodnosci', 'adres_admin', 'nr_admin', 'kontakt_klient', 'data_klient','uwagi_inwestora'].indexOf(kolumna) > -1) {
+                if (['typ_niezgodnosci', 'opis_niezgodnosci', 'adres_admin', 'nr_admin', 'kontakt_klient', 'data_klient', 'uwagi_inwestora'].indexOf(kolumna) > -1) {
                     return
                 }
             }
@@ -111,9 +139,22 @@ Vue.createApp({
             console.log(elem.id + kolumna);
             setTimeout(() => {
                 // if (kolumna != 'komentarz_serwisu') {
-                    if (document.getElementById(elem.id + kolumna)) {
-                       document.getElementById(elem.id + kolumna).focus();
-                    }
+                if (document.getElementById(elem.id + kolumna)) {
+                    document.getElementById(elem.id + kolumna).focus();
+                }
+                // }
+            }, 100);
+
+        },
+        handleChangeExtra(elem, kolumna) {
+            console.log('handleChangeExtra');
+            console.log(elem);
+            elem.editable = true;
+            setTimeout(() => {
+                // if (kolumna != 'komentarz_serwisu') {
+                if (document.getElementById(elem.id + kolumna)) {
+                    document.getElementById(elem.id + kolumna).focus();
+                }
                 // }
             }, 100);
 
@@ -235,7 +276,7 @@ Vue.createApp({
             };
             await axios.post('api/extraadd.php', extraform).then((res) => location.reload());
 
-                
+
         },
         update(id) {
             let self = this;
@@ -287,7 +328,7 @@ Vue.createApp({
             }
 
         },
-        async upload(){
+        async upload() {
             this.loadingfile = true;
             this.attachmentmessages = [];
             this.attachmentprompt = false;
@@ -296,23 +337,89 @@ Vue.createApp({
 
             const formData = new FormData;
             formData.append('file', document.querySelector('#fileToUpload').files[0]);
-            formData.append('description','');
+            formData.append('description', '');
             formData.append('usterka_id', this.activeusterka);
 
 
-            await fetch('/api/upload3.php', {method:'POST',body:formData});
+            await fetch('/api/upload3.php', { method: 'POST', body: formData }).then((res) => res.json()).then((res) => this.attachmentmessages.push(res.message));
+
             this.loadingfile = false;
 
-            this.attachmentmessages.push('PLIK ZOSTAŁ WRZUCONY MOŻESZ ZAMKNĄĆ OKNO');
 
             await axios.get('api/files.php?projectid=' + id).then((res) => self.files = res.data);
 
         },
-        showAttachments(id){
+        showAttachments(id) {
             this.attachmentmessages = [];
             this.attachmentsbool = true;
             this.activeusterka = id;
-        }
+        },
+        loadExcel() {
+            // let processedarray = []
+            // processedarray = this.excelinput.split('\n');
+
+            let processed = this.excelinput.split('\t');
+
+            this.form.lokal = processed[0];
+            this.form.nr_admin = processed[1];
+            this.form.adres_admin = processed[2];
+            this.form.kontakt_klient = processed[3];
+            this.form.data_klient = processed[4];
+            this.form.typ_niezgodnosci = processed[5];
+            this.form.opis_niezgodnosci = processed[6];
+            this.form.uwagi_inwestora = processed[7];
+            this.form.nr_zlecenia = processed[8];
+            this.form.nr_pozycji = processed[9];
+
+
+
+            console.log(processedarray);
+
+        },
+        async exportToExcel() {
+            const data = [
+                // [{ value: 'Name' }, { value: 'Age' }],
+                // [{ value: 'John Doe' }, { value: 29 }],
+                // [{ value: 'Jane Smith' }, { value: 34 }],
+            ];
+
+            let localarrh = []
+            for (let key in this.filtered[0]) {
+
+                localarrh.push({ value: key });
+            }
+
+            data.push(localarrh);
+
+
+            for (let i = 0; i < this.filtered.length; i++) {
+                let localarr = []
+                let elem = this.filtered[i];
+
+
+
+                for (let key in this.filtered[i]) {
+                    localarr.push({ value: this.filtered[i][key] });
+                }
+
+                console.log(localarr);
+                data.push(localarr);
+
+            }
+
+            console.log(data);
+
+
+
+
+            try {
+                await writeExcelFile(data, { fileName: 'example.xlsx' });
+                alert('Excel file has been exported successfully!');
+            } catch (error) {
+                console.error('Error exporting Excel file:', error);
+            }
+        },
+
 
 
 
@@ -353,21 +460,57 @@ Vue.createApp({
                 if (this.filtry.SPW === '-') {
                     filtered = filtered.filter((el) => el.SPW == '' || el.editable)
                 } else {
-                    filtered = filtered.filter((el) => el.SPW.toLowerCase().indexOf(self.filtry.SPW) > -1)
+                    filtered = filtered.filter((el) => el.SPW?.toLowerCase().indexOf(self.filtry.SPW) > -1)
                 }
             }
 
             if (this.filtry.klasyfikacja) {
-                filtered = filtered.filter((el) => el.klasyfikacja.toLowerCase().indexOf(self.filtry.klasyfikacja) > -1)
+                filtered = filtered.filter((el) => el.klasyfikacja?.toLowerCase().indexOf(self.filtry.klasyfikacja.toLowerCase()) > -1)
             }
 
             if (this.filtry.lokal) {
-                filtered = filtered.filter((el) => el.lokal.toLowerCase().indexOf(self.filtry.lokal) > -1)
+                filtered = filtered.filter((el) => el.lokal?.toLowerCase().indexOf(self.filtry.lokal) > -1)
             }
 
-            if (this.filtry.status) {
-                filtered = filtered.filter((el) => el.status.toLowerCase().indexOf(self.filtry.status.toLowerCase()) > -1)
+            if (this.filtry.adres_admin) {
+                filtered = filtered.filter((el) => el.adres_admin?.toLowerCase().indexOf(self.filtry.adres_admin.toLowerCase()) > -1)
             }
+
+            if (this.filtry.nr_admin) {
+                filtered = filtered.filter((el) => el.nr_admin?.toLowerCase().indexOf(self.filtry.nr_admin.toLowerCase()) > -1)
+            }
+
+            if (this.filtry.kontakt_klient) {
+                filtered = filtered.filter((el) => el.kontakt_klient?.toLowerCase().indexOf(self.filtry.kontakt_klient.toLowerCase()) > -1)
+            }
+
+            if (this.filtry.nr_oferty) {
+                filtered = filtered.filter((el) => el.nr_oferty?.toLowerCase().indexOf(self.filtry.nr_oferty.toLowerCase()) > -1)
+            }
+
+            if (this.filtry.uwagi_inwestora) {
+                filtered = filtered.filter((el) => el.uwagi_inwestora?.toLowerCase().indexOf(self.filtry.uwagi_inwestora.toLowerCase()) > -1)
+            }
+
+
+            if (this.filtry.status) {
+                filtered = filtered.filter((el) => el.status?.toLowerCase().indexOf(self.filtry.status.toLowerCase()) > -1)
+            }
+
+            if (this.filtry.date_start && this.filtry.date_end) {
+                const startDate = new Date(this.filtry.date_start);
+                const endDate = new Date(this.filtry.date_end);
+                endDate.setHours(23, 59, 59, 999);
+
+                filtered = filtered.filter((el) => {
+                    const createdAtDate = new Date(el.created_at);
+                    if (createdAtDate <= endDate) {
+                        console.log(createdAtDate, endDate);
+                    }
+                    return createdAtDate >= startDate && createdAtDate <= endDate;
+                });
+            }
+
 
             if (this.user.group != 'admin') {
                 filtered = filtered.filter((el) => !el.hidden);

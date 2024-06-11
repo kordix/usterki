@@ -35,3 +35,9 @@ ADD COLUMN `hidden` varchar(1) default '';
 
 ALTER TABLE usterki
 ADD COLUMN `nr_pozycji` varchar(255) default '';
+
+ALTER TABLE usterki
+ADD COLUMN `opis_niezgodnosci_serwis` varchar(255) default '';
+
+ALTER TABLE usterki
+ADD COLUMN `typ_niezgodnosci_serwis` varchar(255) default '';

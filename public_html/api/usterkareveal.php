@@ -15,7 +15,7 @@ $id = $_GET['id'];
 
 $project_id = $_GET['projectid'];
 
-$query = "update usterki set hidden = '', usterka_numer =  (SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id = $project_id and hidden = 0 limit 1) where id = ?";
+$query = "update usterki set hidden = '', usterka_numer =  (SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id = $project_id and hidden = 0 limit 1) , created_at = NOW() where id = ?";
 $sth = $dbh->prepare($query);
 $sth->execute([$id]);
 

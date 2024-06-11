@@ -11,7 +11,7 @@ if(!isset($_SESSION['zalogowany'])) {
 require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 $id = $_GET['id'];
-$query = "select * from extras where project_id = ?";
+$query = "select '' as editable,extras.* from extras where project_id = ?";
 
 
 

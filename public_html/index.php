@@ -52,7 +52,7 @@ if(!isset($_SESSION['zalogowany'])) {
                     <table style="font-size:14px">
                         
                             <tr style="font-weight:bold">
-                                <td>id</td>
+                                <!-- <td>id</td> -->
                                 <td>Nazwa projektu</td>
                                 <td>Adres</td>
                                 <td v-if="user.group == 'admin'">Użytkownicy</td>
@@ -66,7 +66,7 @@ if(!isset($_SESSION['zalogowany'])) {
                       
                         <tr v-for="elem in projekty" style="cursor:pointer" @click="activeproject = elem.id"
                             :class="{'highlight':elem.id == activeproject}">
-                            <td>#{{elem.id}}</td>
+                            <!-- <td>#{{elem.id}}</td> -->
                             <td>{{elem.nazwa_projektu}}</td>
                             <td>{{elem.adres}}</td>
                             <td v-if="user.group == 'admin'">
