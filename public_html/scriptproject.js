@@ -198,6 +198,7 @@ Vue.createApp({
             let self = this;
             let formlocal = {}
             formlocal[column] = elem[column];
+            formlocal.kolumna = column;
 
 
             let endpoint = 'api/usterkaupdate.php';

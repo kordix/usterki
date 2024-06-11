@@ -11,13 +11,12 @@ if(!isset($_SESSION['zalogowany'])) {
 require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 
-$allowed = ['link','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','SPW','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
+$allowed = ['typ_niezgodnosci_serwis','opis_niezgodnosci_serwis','link','lokal','adres_admin','nr_admin','kontakt_klient','data_klient','uwagi_inwestora','SPW','typ_niezgodnosci','opis_niezgodnosci','termin_zgloszenia','klasyfikacja','komentarz_serwisu','status','komentarz_budowy','project_id','plan_id','x','y'];
 
 
 //replace
 $dane = json_decode(file_get_contents('php://input'));
 
-echo 'fasfafdsaf';
 print_r($dane->dane);
 
 

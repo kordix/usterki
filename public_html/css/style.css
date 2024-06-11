@@ -185,12 +185,12 @@ th{
     color:#999 !important;
   }
 
-  table tr:nth-child(odd) {
+  table tr:nth-child(even) {
     background-color: white;
       /* Kolor dla nieparzystych wierszy */
   }
 
-  tbody > tr:nth-child(even) {
+  tbody > tr:nth-child(odd) {
             background-color: #e9e9e9;
       /* Kolor dla parzystych wierszy */
   }

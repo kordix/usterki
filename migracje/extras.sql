@@ -29,3 +29,9 @@ CREATE TABLE extras (
 )
 
 ALTER TABLE extras add column extra_numer varchar(10);
+
+ALTER TABLE extras
+ADD COLUMN `opis_niezgodnosci_serwis` varchar(255) default '';
+
+ALTER TABLE extras
+ADD COLUMN `typ_niezgodnosci_serwis` varchar(255) default '';

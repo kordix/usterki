@@ -143,10 +143,16 @@ if($_SESSION['group'] == 'klient') {
                         <b>Uwagi inwestora</b>
                     </th>
                     <th class="clientside" >
-                        Link
+                        Pliki
                     </th>
                     <th @click="sortuj('status')">
                         <b>Status</b>
+                    </th>
+                    <th @click="sortuj('typ_niezgodnosci_serwis')">
+                        Typ usterki
+                    </th>
+                    <th @click="sortuj('opis_niezgodnosci_serwis')">
+                        Opis usterki
                     </th>
                     <th style="width:300px" @click="sortuj('komentarz_serwisu')">
                         <b>Komentarz serwisu</b>
@@ -231,7 +237,7 @@ if($_SESSION['group'] == 'klient') {
 
                     </th>
                     <th>
-                        <select name="" id="" v-model="filtry.status" >
+                        <select name="" id="" v-model="filtry.status" style="width:110px">
                             <option value="">-</option>
                             <option value="Zgłoszona">Zgłoszona</option>
                             <option value="Wykonana">Wykonana</option>
@@ -241,6 +247,20 @@ if($_SESSION['group'] == 'klient') {
                             <option value="Rezygnacja">Rezygnacja</option>
                             <option value="Niezasadna">Niezasadna</option>
                         </select>
+                    </th>
+                    <th>
+                        <select name="" id="" v-model="filtry.typ_niezgodnosci_serwis" class="typusterkiselect">
+                            <option value="">-</option>
+                            <option value="Wada szyby">Wada szyby</option>
+                            <option value="Uszkodzone / Wada powierzchni">Uszkodzone</option>
+                            <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
+                            <option value="Brak / niekompletność">Brak / niekompletność</option>
+                            <option value="Wada funkcjonowania">Wada funkcjonowania</option>
+                            <option value="Wada wymiarowa">Wada wymiarowa</option>
+                        </select>
+                    </th>
+                       <th>
+                        <input type="text" v-model="filtry.opis_niezgodnosci_serwis">
                     </th>
                    
                     <th>
@@ -368,6 +388,29 @@ if($_SESSION['group'] == 'klient') {
 
                         </td>
 
+                        <td @click="handleChange(elem,'typ_niezgodnosci_serwis')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative" title="komentarz serwisu">
+                             <span v-if="!elem.typ_niezgodnosci_serwis" style="opacity:0.8">{{elem.typ_niezgodnosci}}</span>
+                            <span v-if="!elem.editable && elem.typ_niezgodnosci_serwis"><i class="bi bi-exclamation-octagon" style="color:red"></i> {{elem.typ_niezgodnosci_serwis}}</span>
+
+                            <select name="" :id="elem.id+'typ_niezgodnosci'" v-model="elem.typ_niezgodnosci_serwis" @change="updateAuto(elem,'typ_niezgodnosci_serwis')" style="width:95%" v-if="elem.editable" @blur.stop="elem.editable = false">
+                            <option value="">-</option>
+                                <option value="Wada szyby">Wada szyby</option>
+                                <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
+                                <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
+                                <option value="Brak / niekompletność">Brak / niekompletność</option>
+                                <option value="Wada funkcjonowania">Wada funkcjonowania</option>
+                                <option value="Wada wymiarowa">Wada wymiarowa</option>
+                            </select>
+                            
+
+                        </td>
+
+                       <td @click="handleChange(elem,'opis_niezgodnosci_serwis')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative" title="komentarz serwisu">
+                           <span v-if="!elem.opis_niezgodnosci_serwis" style="opacity:0.8">{{elem.opis_niezgodnosci}}</span>
+                            <span v-if="!elem.editable && elem.opis_niezgodnosci_serwis"><i class="bi bi-exclamation-octagon" style="color:red"></i> {{elem.opis_niezgodnosci_serwis}}</span>
+                            <textarea :id="elem.id+'opis_niezgodnosci_serwis'" v-if="elem.editable"  v-model="elem.opis_niezgodnosci_serwis" :disabled="user.group == 'klient'" @change="updateAuto(elem,'opis_niezgodnosci_serwis')" style="width:95%" @blur="elem.editable = false"></textarea>
+                        </td>
+
                         <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative" title="komentarz serwisu">
                             <span v-if="!elem.editable">  <b v-if="extras.filter(el=>el.usterka_id == elem.id).length"> {{elem.usterka_numer}}.1</b> {{elem.komentarz_serwisu}}</span>
                             <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur="elem.editable = false"></textarea>
@@ -450,6 +493,25 @@ if($_SESSION['group'] == 'klient') {
                                 <option value="Niezasadna">Niezasadna</option>
                         
                             </select>
+                        </td>
+
+                        <td @click.stop="handleChangeExtra(ext,'typ_niezgodnosci_serwisextra')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
+                            <span v-if="!ext.editable"> {{ext.typ_niezgodnosci_serwis}}</span>
+                            <select name="" :id="ext.id+'typ_niezgodnosci'" v-model="ext.typ_niezgodnosci_serwis" @change="updateAuto(ext,'typ_niezgodnosci_serwis','extra')" style="width:95%" v-if="ext.editable" @blur.stop="ext.editable = false">
+                            <option value="">-</option>
+                                <option value="Wada szyby">Wada szyby</option>
+                                <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
+                                <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
+                                <option value="Brak / niekompletność">Brak / niekompletność</option>
+                                <option value="Wada funkcjonowania">Wada funkcjonowania</option>
+                                <option value="Wada wymiarowa">Wada wymiarowa</option>
+                            </select>
+                        
+                        </td>
+
+                        <td @click.stop="handleChangeExtra(ext,'opis_niezgodnosci_serwisextra')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative">
+                        <span v-if="!ext.editable"> {{ext.opis_niezgodnosci_serwis}}</span>
+                            <textarea v-if="ext.editable" :id="ext.id+'opis_niezgodnosci_serwisextra'"  v-model="ext.opis_niezgodnosci_serwis" :disabled="user.group == 'klient'" @change="updateAuto(ext,'opis_niezgodnosci_serwis','extra')" style="width:95%" @blur.stop="ext.editable = false"></textarea>
                         </td>
 
 
@@ -541,6 +603,20 @@ if($_SESSION['group'] == 'klient') {
                         </select>
                     </td>
                     <td>
+                        <select name="" id="" v-model="form.typ_niezgodnosci_serwis" class="typusterkiselect">
+                           <option value="">-</option>
+                            <option value="Wada szyby">Wada szyby</option>
+                            <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
+                            <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
+                            <option value="Brak / niekompletność">Brak / niekompletność</option>
+                            <option value="Wada funkcjonowania">Wada funkcjonowania</option>
+                            <option value="Wada wymiarowa">Wada wymiarowa</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea  v-model="form.opis_niezgodnosci_serwis" :disabled="user.group == 'klient'">></textarea>
+                    </td>
+                    <td>
                         <textarea style="width:400px"  v-model="form.komentarz_serwisu" :disabled="user.group == 'klient'">></textarea>
                     </td>
                     <td>
@@ -588,7 +664,7 @@ if($_SESSION['group'] == 'klient') {
             <p style="color:red" v-if="loadingfile">Ładowanie...</p>
             <label for=""> Dodaj plik:</label>
             <input type="file" name="file" id="fileToUpload">
-            <button @click="upload()">upload</button>
+            <button @click="upload()">Wyślij</button>
 
             <br> <br>
             
