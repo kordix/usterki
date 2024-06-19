@@ -198,3 +198,38 @@ th{
   [v-cloak] {
       display: none;
   }
+
+
+  .hover-element {
+      display: none;
+      /* Początkowo ukryty */
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 10;
+      background-color: red;
+      border: 1px solid #ccc;
+
+      box-sizing: border-box;
+  }
+
+  th:hover .hover-element {
+      display: block;
+      /* Pokaż element hover-element przy najechaniu na td */
+  }
+
+  .hide-column{
+    /* display:none; */
+  }
+
+  .hide {
+    display:none;
+  }
+
+  #rowheader > th{
+    position:relative;
+  }
+
+  .adminfile {
+    color:red;
+  }

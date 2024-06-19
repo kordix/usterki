@@ -16,8 +16,9 @@ require($_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR.'db.php');
 
 $projectid = $_GET['projectid'];
 
-$query = "select f.* from files f
+$query = "select f.*,users.group from files f
 join usterki u on f.usterka_id = u.id
+join users on f.user_id = users.id
 where u.project_id = ?";
 
 

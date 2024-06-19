@@ -15,8 +15,16 @@ $id = $_GET['id'];
 
 $project_id = $_GET['projectid'];
 
-$query = "update usterki set hidden = '', usterka_numer =  (SELECT IFNULL(MAX(usterka_numer) + 1, 1) FROM usterki u WHERE u.project_id = $project_id and hidden = 0 limit 1) , created_at = NOW() where id = ?";
+$query1 = "SELECT IFNULL(MAX(usterka_numer) + 1, 1) as maxusterka FROM usterki u WHERE u.project_id = ? and hidden = 0 limit 1";
+$sth = $dbh->prepare($query1);
+$sth->execute([$project_id]);
+
+$rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+$maxusterka = $rows[0]['maxusterka'];
+
+
+$query = "update usterki set hidden = '', usterka_numer = ? , created_at = NOW() where id = ?";
 $sth = $dbh->prepare($query);
-$sth->execute([$id]);
+$sth->execute([$maxusterka,$id]);
 
 

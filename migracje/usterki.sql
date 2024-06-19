@@ -1,17 +1,17 @@
 CREATE TABLE usterki (
     id int PRIMARY KEY AUTO_INCREMENT,
     typ_niezgodnosci varchar(255) default '',
-    opis_niezgodnosci text,
-    adres_admin text,
-    nr_admin varchar(255),
-    kontakt_klient varchar(255),
-    data_klient varchar(255),
-    uwagi_inwestora text,
+    opis_niezgodnosci text NULL,
+    adres_admin text NULL,
+    nr_admin varchar(255) default '',
+    kontakt_klient varchar(255) default '',
+    data_klient varchar(255) default '',
+    uwagi_inwestora text NULL,
     termin_zgloszenia varchar(255) default '',
     klasyfikacja varchar(255) default '',
-    komentarz_serwisu text,
+    komentarz_serwisu text NULL,
     `status` varchar(255) default '',
-    komentarz_budowy text,
+    komentarz_budowy text NULL,
     `lokal` varchar(255) default '',
     `odbiorca` varchar(255) default '',
     project_id int default null,
@@ -25,7 +25,7 @@ CREATE TABLE usterki (
     updated_at timestamp NULL,  
     link text,
     INDEX idx_project_id(project_id)
-)
+);
 
 ALTER TABLE usterki
 ADD COLUMN usterka_numer INT;

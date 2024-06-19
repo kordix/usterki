@@ -95,7 +95,7 @@ if ($file) {
             // File was successfully uploaded
 
             
-            echo('{"message":"Plik został zuploadowany"}');
+            echo('{"message":"Pomyślnie dodano załącznik"}');
 
 
             $dane = new stdClass();
@@ -103,6 +103,7 @@ if ($file) {
             $dane->filename = $filename;
             
             $dane->usterka_id = $_POST['usterka_id'];
+            $dane->user_id = $_SESSION['id'];
 
 
 

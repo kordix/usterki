@@ -99,19 +99,24 @@ if($_SESSION['group'] == 'klient') {
             <table id="usterkitable">
                 <!-- NAGŁÓWEK -->
                 <tr>
-                    <td colspan="13" style="background:lightgreen;text-align:center;">
+                    <td colspan="13" style="background:lightgreen;text-align:center;" id="strefa1td">
                         <template style="display:flex;justify-content:space-between">
-                            <span><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}</span>
+                            <span><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}  
+                            
+                                <span v-if="hiddenColumns.length > 0 "><b> Schowane kolumny:</b></span>
+                                <span style="cursor:pointer" v-for="hid in hiddenColumns" @click="hideColumn(hid,true)">{{hid}} &nbsp;  </span>  
+                        
+                            </span>
                             <span>STREFA KLIENTA</span>
                             <span></span>
                         </template>
                         
                     </td>
-                    <td colspan="7" style="background:darksalmon;text-align:center">
+                    <td colspan="7" style="background:darksalmon;text-align:center" id="strefa2td">
                         STREFA SERWISU
                     </td>
                 </tr>
-                <tr style="cursor:pointer">
+                <tr style="cursor:pointer" id="rowheader">
                     <th @click="sortuj('id')">id</td>
                     <th style="width:140px" @click="sortuj('created_at')">
                         Data zgłoszenia
@@ -124,8 +129,8 @@ if($_SESSION['group'] == 'klient') {
                         Adres administracyjny
                     </th>
                     <th @click="sortuj('nr_admin')">Nr admin.</th>
-                    <th @click="sortuj('kontakt_klient')">Kontakt do klienta</th>
-                    <th @click="sortuj('data_klient')">Data zgłoszenia przez klienta</th>
+                    <th id="thkontakt_klient" @click="sortuj('kontakt_klient')" style="position:relative">Kontakt do klienta <div class="hover-element"><i class="bi bi-eye-slash" style="font-size:20px" @click.stop="hideColumn('kontakt_klient')"></i></div></th>
+                    <th id="thdata_klient" @click="sortuj('data_klient')" >Data zgłoszenia przez klienta <div class="hover-element"><i class="bi bi-eye-slash" style="font-size:20px" @click.stop="hideColumn('data_klient')"></i></div></th>
                     <th @click="sortuj('typ_niezgodnosci')" title="Zgłoszony typ usterki">
                         <span>Zgł. typ usterki</span>
                     </th>
@@ -143,7 +148,7 @@ if($_SESSION['group'] == 'klient') {
                         <b>Uwagi inwestora</b>
                     </th>
                     <th class="clientside" >
-                        Pliki
+                        Załączniki
                     </th>
                     <th @click="sortuj('status')">
                         <b>Status</b>
@@ -335,7 +340,7 @@ if($_SESSION['group'] == 'klient') {
                             </select>
 
                         </td>
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')" title="Opis usterki">
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')" title="Opis usterki" class="disabledcursor">
                             <span v-if="!elem.editable">  {{elem.opis_niezgodnosci}}</span>
                             <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
                         </td>
@@ -363,7 +368,7 @@ if($_SESSION['group'] == 'klient') {
 
                             <div style="display:flex;justify-content:flex-between;width:100px">
                                 <div title="Podpięty załącznik">
-                                    <a v-for="file in files.filter((el)=>el.usterka_id == elem.id)" target="_blank" :href="/uploads/+file.filename"> <i style="font-size:20px" class="bi bi-file-arrow-down"></i> </a>
+                                    <a v-for="file in files.filter((el)=>el.usterka_id == elem.id)" :class="{adminfile:file.group == 'admin' }"target="_blank" :href="/uploads/+file.filename"> <i style="font-size:20px" class="bi bi-file-arrow-down"></i> </a>
                                 </div>
                                 <i class="bi bi-cloud-arrow-up" style="display:inline-block;font-size:20px;margin-left:auto;cursor:pointer" @click="showAttachments(elem.id)" title="dodaj załącznik"></i>
 
@@ -452,8 +457,8 @@ if($_SESSION['group'] == 'klient') {
                             <div style="display:flex;flex-wrap:no-wrap">
                                 <button class="btn-sm btn-danger" @click="deletedialogbool=true;activeusterka=elem.id" style="display:inline-block;margin-right:5px"><i class="bi bi-trash"></i></button>
                                 <button @click="addExtra(elem.id)" style="display:inline-block;margin-right:5px" :disabled="user.group == 'klient'">+</button>
-                                <!-- <button class="btn-sm btn-warning" @click="hide(elem.id)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && !elem.hidden"><i class="bi bi-eye-slash"></i></button> -->
                                 <button class="btn-sm btn-warning" @click="revealdialogbool = true;activeusterka = elem.id" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && elem.hidden"><i class="bi bi-eye"></i></button>
+                                <button @click="logdialogbool = true;activeusterka = elem.id" class="btn-sm btn-secondary" style="display:inline-block;margin-right:5px" :disabled="user.group == 'klient'"><i class="bi bi-newspaper"></i></button>
                                 
 
                                 
@@ -541,7 +546,7 @@ if($_SESSION['group'] == 'klient') {
                 </template>
                 <!-- DODAWANIE -->
                 <tr id="addformtable" class="addrow">
-                    <td><template v-if="crudmode == 'add' && form.lokal" > 
+                    <td><template v-if="crudmode == 'add' && form.opis_niezgodnosci" > 
                             <button title="zapisz" @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
                             <button title="zapisz jako ukryte" @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group == 'admin'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
 
@@ -696,6 +701,53 @@ if($_SESSION['group'] == 'klient') {
         </div>
     </div>
 
+    <div class="lightbox" id="reveallightbox" :class="{active:logdialogbool}">
+        <div style="background:white;width:90%;border-radius:5px;padding:20px;">
+        <p><b>Historia usterki:</b></p>
+        <table>
+            <tr>
+                <td>
+                    Login
+                </td>
+                 
+                <td>
+                    Data
+                </td>
+                 <td>
+                    Rodzaj akcji
+                </td>
+                <td>
+                    Kolumna
+                </td>
+              
+            </tr>
+            <tr v-for="elem in logs.filter((el)=>el.usterka_id == activeusterka )">
+                <td>
+                    {{elem.login}}
+                </td>
+                <td>
+                    {{elem.created_at}}
+                </td>
+                <td>
+                    <span v-if="elem.action == 'add'">Dodano usterkę</span>
+                    <span v-if="elem.action == 'update'">Zmiana</span>
+
+                </td>
+                <td>
+                    <span v-if="elem.action == 'add'">-</span>
+                    <span v-else>{{elem.kolumna}}</span>
+
+
+                    
+                </td>
+            </tr>
+        </table>
+
+            <br>
+            <button @click="logdialogbool = !logdialogbool" class="btn btn-danger">x Zamknij</button>
+        </div>
+    </div>
+
 
     <br><br>
 
@@ -712,9 +764,9 @@ if($_SESSION['group'] == 'klient') {
 
     </div>
 
-    <div v-if="user.group == 'admin'">
+    <div v-if="excelbulkbool">
         <textarea name="" id="" rows="10" cols="150" v-model="excelinput" placeholder="wklej wiersz z excela"></textarea><br>
-        <button @click="loadExcel">Wczytaj dane</button>
+        <button @click="loadExcelBulk">Wczytaj dane</button>
      </div>
 
 

@@ -61,7 +61,11 @@ Vue.createApp({
             loadingfile: false,
             excelinput: '',
             deletedialogbool: false,
-            revealdialogbool: false
+            revealdialogbool: false,
+            logdialogbool: false,
+            logs: [],
+            hiddenColumns: [],
+            excelbulkbool:false
 
         }
     },
@@ -71,9 +75,10 @@ Vue.createApp({
         await axios.get('api/project.php?id=' + id).then((res) => self.project = res.data[0]);
         await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
         await axios.get('api/extras.php?id=' + id).then((res) => self.extras = res.data);
-
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
         await axios.get('api/files.php?projectid=' + id).then((res) => self.files = res.data);
+        await axios.get('api/logs.php?projectid=' + id).then((res) => self.logs = res.data);
+
 
         document.onkeydown = function (evt) {
             evt = evt || window.event;
@@ -85,11 +90,16 @@ Vue.createApp({
                 }
                 else if (self.deletedialogbool) {
                     self.deletedialogbool = false;
+                } else if (self.logdialogbool) {
+                    self.logdialogbool = false;
                 }
             }
         }
 
         this.filtry.date_end = new Date().toISOString().split('T')[0];
+
+        console.log('COŚ TAM REAGUJE');
+
 
 
 
@@ -97,6 +107,56 @@ Vue.createApp({
 
     },
     methods: {
+        hideColumn(column, reveal) {
+            console.log(column);
+            if (reveal) {
+                this.hiddenColumns = this.hiddenColumns.filter((el) => el != column);
+                this.hiddenColumns = [];
+
+            } else {
+                this.hiddenColumns.push(column);
+            }
+
+
+            console.log(this.hiddenColumns);
+
+
+            if(!reveal){
+                document.getElementById('th' + column).classList.add('hide-column');
+            }
+
+
+
+            var table = document.getElementById('usterkitable');
+            var ths = table.getElementsByTagName('th');
+
+            for (var i = 0; i < ths.length; i++) {
+                if (ths[i].classList.contains('hide-column')) {
+                    var index = i + 1; // nth-child is 1-based index
+                    var cells = table.querySelectorAll('tr > *:nth-child(' + index + ')');
+                    cells.forEach(function (cell) {
+                        cell.classList.add('hide');
+                        if (reveal) {
+                            cell.classList.remove('hide');
+                        }
+                    });
+
+                    if(reveal){
+                        ths[i].classList.remove('hide-column')
+                    }
+                }
+            }
+
+            // if (reveal) {
+            //     document.getElementById('th' + column).classList.remove('hide-column');
+
+            // }
+
+            document.querySelector('#strefa1td').classList.remove('hide');
+            document.querySelector('#strefa2td').classList.remove('hide');
+
+
+        },
         shouldAddSeparator(index) {
             // return false;
             // console.log('dupa');
@@ -253,7 +313,7 @@ Vue.createApp({
         test() {
             console.log('test');
         },
-        async save(hidden) {
+        async save(hidden,norefresh) {
             let self = this;
             const id = document.querySelector('#projectid').innerHTML;
             this.form.project_id = id;
@@ -264,7 +324,12 @@ Vue.createApp({
                 this.form.hidden = '';
             }
             await axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'));
-            location.reload();
+            if(!norefresh){
+                location.reload();
+            }else{
+                await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
+
+            }
         },
         async addExtra(id) {
             const project_id = document.querySelector('#projectid').innerHTML;
@@ -301,7 +366,7 @@ Vue.createApp({
             } else {
                 await axios.get('api/usterkahide.php?id=' + id);
             }
-            location.reload();
+            // location.reload();
         },
         async usunExtra(id) {
             await axios.get('api/usterkaextradelete.php?id=' + id);
@@ -377,6 +442,41 @@ Vue.createApp({
             console.log(processedarray);
 
         },
+        async loadExcelBulk() {
+            // let processedarray = []
+            let processedarray = this.excelinput.split('\n');
+
+            if (processedarray[processedarray.length-1] == ''){
+                console.log('WIDZI PUSTE');
+                processedarray.pop();
+            }
+
+            for (let i = 0; i < processedarray.length;i++){
+                let processed = processedarray[i].split('\t');
+
+                this.form.lokal = processed[0];
+                this.form.adres_admin = processed[1];
+                this.form.nr_admin = processed[2];
+                this.form.kontakt_klient = processed[3];
+                this.form.data_klient = processed[4];
+                this.form.typ_niezgodnosci = processed[5];
+                this.form.opis_niezgodnosci = processed[6];
+                this.form.uwagi_inwestora = processed[9];
+                this.form.nr_zlecenia = processed[7];
+                this.form.nr_pozycji = processed[8];
+
+                await this.save(false,true);
+
+            }
+
+            location.reload();
+
+           
+
+
+            console.log(processedarray);
+
+        },
         async exportToExcel() {
             const data = [
                 // [{ value: 'Name' }, { value: 'Age' }],
@@ -385,36 +485,104 @@ Vue.createApp({
             ];
 
             let localarrh = []
-            for (let key in this.filtered[0]) {
+            // for (let key in this.filtered[0]) {
 
-                localarrh.push({ value: key });
-            }
+            //     localarrh.push({ value: key });
+            // }
+
+            localarrh.push({ value: 'Id' });
+            localarrh.push({ value: 'Data zgłoszenia' });
+            localarrh.push({ value: 'Nr bud.' });
+            localarrh.push({ value: 'Adres administracyjny' });
+            localarrh.push({ value: 'Nr admin.' });
+            localarrh.push({ value: 'Kontakt do klienta.' });
+            localarrh.push({ value: 'Data zgłoszenia przez klienta.' });
+            localarrh.push({ value: 'Zgł. typ usterki' });
+            localarrh.push({ value: 'Zgłoszony opis usterki' });
+            localarrh.push({ value: 'Numer zlecenia' });
+            localarrh.push({ value: 'Numer pozycji' });
+            localarrh.push({ value: 'Uwagi inwestora' });
+            localarrh.push({ value: 'Status' });
+            localarrh.push({ value: 'Typ usterki' });
+            localarrh.push({ value: 'Opis niezgodności' });
+            localarrh.push({ value: 'Komentarz serwisu' });
+            localarrh.push({ value: 'Nr oferty' });
+            localarrh.push({ value: 'SPW' });
+            localarrh.push({ value: 'Klasyfikacja' });
+
+
+
+
+
+
+
 
             data.push(localarrh);
 
-
             for (let i = 0; i < this.filtered.length; i++) {
                 let localarr = []
-                let elem = this.filtered[i];
+                
+                // for (let key in this.filtered[i]) {
+                //     localarr.push({ value: this.filtered[i][key] });
+                // }
 
+                localarr.push({ value: this.filtered[i].usterka_numer });
+                localarr.push({ value: this.filtered[i].created_at });
+                localarr.push({ value: this.filtered[i].lokal });
+                localarr.push({ value: this.filtered[i].adres_admin });
+                localarr.push({ value: this.filtered[i].nr_admin });
+                localarr.push({ value: this.filtered[i].kontakt_klient });
+                localarr.push({ value: this.filtered[i].data_klient });
+                localarr.push({ value: this.filtered[i].typ_niezgodnosci });
+                localarr.push({ value: this.filtered[i].opis_niezgodnosci });
+                localarr.push({ value: this.filtered[i].nr_zlecenia });
+                localarr.push({ value: this.filtered[i].nr_pozycji });
+                localarr.push({ value: this.filtered[i].uwagi_inwestora });
+                localarr.push({ value: this.filtered[i].status });
+                localarr.push({ value: this.filtered[i].typ_niezgodnosci_serwis });
+                localarr.push({ value: this.filtered[i].opis_niezgodnosci_serwis });
+                localarr.push({ value: this.filtered[i].komentarz_serwisu });
+                localarr.push({ value: this.filtered[i].nr_oferty });
+                localarr.push({ value: this.filtered[i].SPW });
+                localarr.push({ value: this.filtered[i].klasyfikacja });
 
-
-                for (let key in this.filtered[i]) {
-                    localarr.push({ value: this.filtered[i][key] });
-                }
-
-                console.log(localarr);
                 data.push(localarr);
 
             }
 
             console.log(data);
 
+            const sheetOptions = {
+                columns: [
+                    { width: 5 }, //usterka numer
+                    { width: 25 },  //created_at
+                    { width: 10 }, //lokal
+                    { width: 20 }, //adres_admin
+                    { width: 10 }, //nr_admin
+                    { width: 30 }, //kontakt_klient
+                    { width: 20 }, //data_klient
+                    { width: 20 }, //typ_niezgodnosci
+                    { width: 100 }, //opis_niezgodnosci
+                    { width: 30 }, //nr_zlecenia
+                    { width: 20 },  //nr_pozycji
+                    { width: 50 }, //uwagi_inwestora
+                    { width: 20 },  //status
+                    { width: 20 },  //typ_niezgodnosci_serwis
+                    { width: 50 },  //opis_niezgodnosci_serwis
+                    { width: 100 },  //komentarz_serwisu
+                    { width: 20 },  //nr_oferty
+                    { width: 20 },  //SPW
+                    { width: 20 },  //klasyfikacja
+
+                ]
+            };
+
+
 
 
 
             try {
-                await writeExcelFile(data, { fileName: 'example.xlsx' });
+                await writeExcelFile(data, { columns: sheetOptions.columns, fileName: 'example.xlsx' });
                 alert('Excel file has been exported successfully!');
             } catch (error) {
                 console.error('Error exporting Excel file:', error);
@@ -470,7 +638,7 @@ Vue.createApp({
             }
 
             if (this.filtry.lokal) {
-                filtered = filtered.filter((el) => el.lokal?.toLowerCase().indexOf(self.filtry.lokal) > -1)
+                filtered = filtered.filter((el) => el.lokal?.toLowerCase().indexOf(self.filtry.lokal.toLowerCase()) > -1)
             }
 
             if (this.filtry.adres_admin) {
@@ -523,6 +691,11 @@ Vue.createApp({
 
                     var a = a[self.sortkey];
                     var b = b[self.sortkey];
+
+                    if(self.sortkey == 'id'){
+                        a = parseInt(a);
+                        b = parseInt(b);
+                    }
 
                     // Compare the 2 dates
                     return (a === b ? 0 : a > b ? 1 : -1) * sortorder;

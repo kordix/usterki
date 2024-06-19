@@ -17,3 +17,15 @@ $sth = $dbh->prepare($query);
 $sth->execute([$id]);
 
 
+$query = "delete from logs where usterka_id = ?";
+$sth = $dbh->prepare($query);
+$sth->execute([$id]);
+
+
+$query = "delete from files where usterka_id = ?";
+$sth = $dbh->prepare($query);
+$sth->execute([$id]);
+
+
+
+
