@@ -103,9 +103,10 @@ if($_SESSION['group'] == 'klient') {
                         <template style="display:flex;justify-content:space-between">
                             <span><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}  
                             
-                                <span v-if="hiddenColumns.length > 0 "><b> Schowane kolumny:</b></span>
+                                <span v-if="hiddenColumns.length > 0 " style="background:white">
+                                <span ><b> Schowane kolumny:</b></span>
                                 <span style="cursor:pointer" v-for="hid in hiddenColumns" @click="hideColumn(hid,true)">{{hid}} &nbsp;  </span>  
-                        
+                                </span>
                             </span>
                             <span>STREFA KLIENTA</span>
                             <span></span>
@@ -137,6 +138,9 @@ if($_SESSION['group'] == 'klient') {
                     <th @click="sortuj('opis_niezgodnosci')">
                         <b>Zgłoszony opis usterki</b>
                     </th>
+                    <th @click="sortuj('uwagi_inwestora')">
+                        <b>Uwagi inwestora</b>
+                    </th>
                  
                     <th @click="sortuj('nr_zlecenia')">
                         Nr zlecenia
@@ -144,9 +148,7 @@ if($_SESSION['group'] == 'klient') {
                     <th @click="sortuj('nr_pozycji')">
                         Nr pozycji
                     </th>
-                    <th @click="sortuj('uwagi_inwestora')">
-                        <b>Uwagi inwestora</b>
-                    </th>
+                  
                     <th class="clientside" >
                         Załączniki
                     </th>
@@ -228,6 +230,9 @@ if($_SESSION['group'] == 'klient') {
                     <th>
                         <input type="text" v-model="filtry.opis_niezgodnosci" style="width:95%">
                     </th>
+                       <th >
+                        <input type="text" v-model="filtry.uwagi_inwestora" style="width:95%">
+                    </th>
                   
                     <th>
                         <input type="text" v-model="filtry.nr_zlecenia" style="width:95%">
@@ -235,9 +240,7 @@ if($_SESSION['group'] == 'klient') {
                     <th>
                         <input type="text" v-model="filtry.nr_pozycji" style="width:95%">
                     </th>
-                      <th >
-                        <input type="text" v-model="filtry.uwagi_inwestora" style="width:95%">
-                    </th>
+                   
                     <th class="clientside">
 
                     </th>
@@ -344,6 +347,11 @@ if($_SESSION['group'] == 'klient') {
                             <span v-if="!elem.editable">  {{elem.opis_niezgodnosci}}</span>
                             <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
                         </td>
+
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" title="Uwagi inwestora">
+                            <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
+                            <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
+                        </td>
                        
 
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'nr_zlecenia')" title="Numer zlecenia">
@@ -356,10 +364,7 @@ if($_SESSION['group'] == 'klient') {
                             <input :id="elem.id+'nr_pozycji'" v-else  v-model="elem.nr_pozycji" @change="updateAuto(elem,'nr_pozycji')" @blur.stop="elem.editable = false">
                         </td>
 
-                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" title="Uwagi inwestora">
-                            <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
-                            <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
-                        </td>
+                    
 
                         <td class="clientside" title="załączniki">
                             
@@ -565,7 +570,7 @@ if($_SESSION['group'] == 'klient') {
                         <input  type="text" v-model="form.nr_admin" style="width:60px">
                     </td>
                     <td>
-                        <textarea  type="text" v-model="form.kontakt_klient" style="width:200px"></textarea>
+                        <textarea  type="text" v-model="form.kontakt_klient" style="width:150px"></textarea>
                     </td>
                     <td>
                         <input  type="date" v-model="form.data_klient">
@@ -584,6 +589,9 @@ if($_SESSION['group'] == 'klient') {
                     <td>
                         <textarea v-model="form.opis_niezgodnosci" style="width:250px"></textarea>
                     </td>
+                    <td>
+                        <textarea v-model="form.uwagi_inwestora" style="width:150px"></textarea>
+                    </td>
                   
                     <td>
                         <input  v-model="form.nr_zlecenia" style="width:100px">
@@ -591,9 +599,7 @@ if($_SESSION['group'] == 'klient') {
                     <td>
                         <input  v-model="form.nr_pozycji" style="width:100px">
                     </td>
-                      <td>
-                        <textarea v-model="form.uwagi_inwestora" style="width:150px"></textarea>
-                    </td>
+                    
                     <td class="clientside">
 
                     </td>
@@ -764,9 +770,14 @@ if($_SESSION['group'] == 'klient') {
 
     </div>
 
-    <div v-if="excelbulkbool">
-        <textarea name="" id="" rows="10" cols="150" v-model="excelinput" placeholder="wklej wiersz z excela"></textarea><br>
-        <button @click="loadExcelBulk">Wczytaj dane</button>
+    <button class="btn btn-success" @click="excelbulkbool = !excelbulkbool" style="margin:10px"> <i class="bi bi-upload"></i> Import excel
+
+    </button>
+
+    <div v-if="excelbulkbool" style="margin:10px">
+        <button style="display:block" class="btn btn-danger" v-if="excelinput" @click="loadExcelBulk"><i class="bi bi-floppy"></i> Wczytaj dane</button>
+
+        <textarea name="" id="" rows="10" cols="150" v-model="excelinput" placeholder="wklej wiersze z excela"></textarea><br>
      </div>
 
 

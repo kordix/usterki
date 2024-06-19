@@ -433,9 +433,9 @@ Vue.createApp({
             this.form.data_klient = processed[4];
             this.form.typ_niezgodnosci = processed[5];
             this.form.opis_niezgodnosci = processed[6];
-            this.form.uwagi_inwestora = processed[7];
-            this.form.nr_zlecenia = processed[8];
-            this.form.nr_pozycji = processed[9];
+            this.form.nr_zlecenia = processed[7];
+            this.form.nr_pozycji = processed[8];
+            this.form.uwagi_inwestora = processed[9];
 
 
 
