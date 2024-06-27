@@ -679,7 +679,7 @@ if($_SESSION['group'] == 'klient') {
 
             <br> <br>
             
-            <p v-for="message in attachmentmessages">{{message}}</p>
+            <p v-for="message in attachmentmessages"><b>{{message}}</b></p>
 
             <button @click="attachmentsbool = ! attachmentsbool" class="btn btn-danger">x Zamknij</button>
         </div>
@@ -775,7 +775,7 @@ if($_SESSION['group'] == 'klient') {
     </button>
 
     <div v-if="excelbulkbool" style="margin:10px">
-        <button style="display:block" class="btn btn-danger" v-if="excelinput" @click="loadExcelBulk"><i class="bi bi-floppy"></i> Wczytaj dane</button>
+        <button style="display:block" class="btn btn-danger" v-if="excelinput" @click="loadExcel"><i class="bi bi-floppy"></i> Wczytaj dane</button>
 
         <textarea name="" id="" rows="10" cols="150" v-model="excelinput" placeholder="wklej wiersze z excela"></textarea><br>
      </div>

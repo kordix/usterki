@@ -3,7 +3,7 @@ let map;
 import writeExcelFile from 'https://cdn.jsdelivr.net/npm/write-excel-file@2.0.2/+esm';
 
 
-Vue.createApp({
+let app = Vue.createApp({
     data() {
         return {
             user: {},
@@ -65,11 +65,21 @@ Vue.createApp({
             logdialogbool: false,
             logs: [],
             hiddenColumns: [],
-            excelbulkbool:false
+            excelbulkbool: false
 
         }
     },
     async mounted() {
+        if (localStorage.hiddenColumns) {
+            this.hiddenColumns = JSON.parse(localStorage.hiddenColumns)
+
+            let hiddenColumns = JSON.parse(localStorage.hiddenColumns);
+
+            for (let col of hiddenColumns) {
+                console.log(col);
+                this.hideColumn(col, false, true);
+            }
+        }
         const self = this;
         const id = document.querySelector('#projectid').innerHTML;
         await axios.get('api/project.php?id=' + id).then((res) => self.project = res.data[0]);
@@ -107,23 +117,34 @@ Vue.createApp({
 
     },
     methods: {
-        hideColumn(column, reveal) {
-            console.log(column);
-            if (reveal) {
-                this.hiddenColumns = this.hiddenColumns.filter((el) => el != column);
-                this.hiddenColumns = [];
-
-            } else {
-                this.hiddenColumns.push(column);
-            }
-
-
-            console.log(this.hiddenColumns);
-
-
-            if(!reveal){
+        hideColumn(column, reveal, nosave) {
+            if (!reveal) {
                 document.getElementById('th' + column).classList.add('hide-column');
             }
+
+            if (nosave) {
+            } else {
+                if (reveal) {
+                    this.hiddenColumns = this.hiddenColumns.filter((el) => el != column);
+                    this.hiddenColumns = [];
+
+                } else {
+                    this.hiddenColumns.push(column);
+                }
+
+
+                console.log(this.hiddenColumns);
+
+
+
+
+                localStorage.setItem('hiddenColumns', JSON.stringify(this.hiddenColumns));
+            }
+
+
+
+
+
 
 
 
@@ -141,7 +162,7 @@ Vue.createApp({
                         }
                     });
 
-                    if(reveal){
+                    if (reveal) {
                         ths[i].classList.remove('hide-column')
                     }
                 }
@@ -313,7 +334,7 @@ Vue.createApp({
         test() {
             console.log('test');
         },
-        async save(hidden,norefresh) {
+        async save(hidden, norefresh) {
             let self = this;
             const id = document.querySelector('#projectid').innerHTML;
             this.form.project_id = id;
@@ -324,9 +345,9 @@ Vue.createApp({
                 this.form.hidden = '';
             }
             await axios.post('api/usterkaadd.php', this.form).then((res) => console.log('fads'));
-            if(!norefresh){
+            if (!norefresh) {
                 location.reload();
-            }else{
+            } else {
                 await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
 
             }
@@ -366,7 +387,7 @@ Vue.createApp({
             } else {
                 await axios.get('api/usterkahide.php?id=' + id);
             }
-            // location.reload();
+            location.reload();
         },
         async usunExtra(id) {
             await axios.get('api/usterkaextradelete.php?id=' + id);
@@ -426,16 +447,28 @@ Vue.createApp({
 
             let processed = this.excelinput.split('\t');
 
-            this.form.lokal = processed[0];
-            this.form.nr_admin = processed[1];
-            this.form.adres_admin = processed[2];
-            this.form.kontakt_klient = processed[3];
-            this.form.data_klient = processed[4];
-            this.form.typ_niezgodnosci = processed[5];
-            this.form.opis_niezgodnosci = processed[6];
-            this.form.nr_zlecenia = processed[7];
-            this.form.nr_pozycji = processed[8];
-            this.form.uwagi_inwestora = processed[9];
+            let naglowek = 'Nr budynku administracyjny	Nr budynku budowlany	Nr lokalu	Piętro	Data stwierdzenia usterki/data odbioru lokalu	Opis nieprawidłowości wykonania (usterki)	                                Firma odpowiedzialna za zakres robót obejmujący usterkę';
+
+            let naglowki = naglowek.split('\t');
+
+            let lokalindex = naglowki.findIndex((el) => el.indexOf('lokal') >= 0);
+            let adminindex = naglowki.findIndex((el) => el.indexOf('admin') >= 0);
+
+            
+
+
+
+
+            this.form.lokal = processed[lokalindex];
+            this.form.nr_admin = processed[adminindex];
+            // this.form.adres_admin = processed[2];
+            // this.form.kontakt_klient = processed[3];
+            // this.form.data_klient = processed[4];
+            // this.form.typ_niezgodnosci = processed[5];
+            // this.form.opis_niezgodnosci = processed[6];
+            // this.form.uwagi_inwestora = processed[7];
+            // this.form.nr_zlecenia = processed[8];
+            // this.form.nr_pozycji = processed[9];
 
 
 
@@ -446,12 +479,12 @@ Vue.createApp({
             // let processedarray = []
             let processedarray = this.excelinput.split('\n');
 
-            if (processedarray[processedarray.length-1] == ''){
+            if (processedarray[processedarray.length - 1] == '') {
                 console.log('WIDZI PUSTE');
                 processedarray.pop();
             }
 
-            for (let i = 0; i < processedarray.length;i++){
+            for (let i = 0; i < processedarray.length; i++) {
                 let processed = processedarray[i].split('\t');
 
                 this.form.lokal = processed[0];
@@ -461,17 +494,17 @@ Vue.createApp({
                 this.form.data_klient = processed[4];
                 this.form.typ_niezgodnosci = processed[5];
                 this.form.opis_niezgodnosci = processed[6];
-                this.form.uwagi_inwestora = processed[9];
-                this.form.nr_zlecenia = processed[7];
-                this.form.nr_pozycji = processed[8];
+                this.form.uwagi_inwestora = processed[7];
+                this.form.nr_zlecenia = processed[8];
+                this.form.nr_pozycji = processed[9];
 
-                await this.save(false,true);
+                await this.save(false, true);
 
             }
 
             location.reload();
 
-           
+
 
 
             console.log(processedarray);
@@ -521,7 +554,7 @@ Vue.createApp({
 
             for (let i = 0; i < this.filtered.length; i++) {
                 let localarr = []
-                
+
                 // for (let key in this.filtered[i]) {
                 //     localarr.push({ value: this.filtered[i][key] });
                 // }
@@ -692,7 +725,7 @@ Vue.createApp({
                     var a = a[self.sortkey];
                     var b = b[self.sortkey];
 
-                    if(self.sortkey == 'id'){
+                    if (self.sortkey == 'id') {
                         a = parseInt(a);
                         b = parseInt(b);
                     }
@@ -713,3 +746,5 @@ Vue.createApp({
         },
     }
 }).mount('body')
+
+window.app = app; 
