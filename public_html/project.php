@@ -99,7 +99,7 @@ if($_SESSION['group'] == 'klient') {
             <table id="usterkitable">
                 <!-- NAGŁÓWEK -->
                 <tr>
-                    <td colspan="5" style="background:lightgreen;text-align:center;" id="strefa1td">
+                    <td :colspan="5+headers.length" style="background:lightgreen;text-align:center;" id="strefa1td">
                         <template style="display:flex;justify-content:space-between">
                             <span :class="{'bold':filtered.length < usterki.length}"><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}  
                             
@@ -113,7 +113,7 @@ if($_SESSION['group'] == 'klient') {
                         </template>
                         
                     </td>
-                    <td colspan="7" style="background:darksalmon;text-align:center" id="strefa2td">
+                    <td colspan="9" style="background:darksalmon;text-align:center" id="strefa2td">
                         STREFA SERWISU
                     </td>
                 </tr>
@@ -123,6 +123,9 @@ if($_SESSION['group'] == 'klient') {
                         Data zgłoszenia
                     </th>
                   
+                    <th v-for="header in headers">
+                        {{header}}
+                    </th>  
                     
                     <th @click="sortuj('nr_zlecenia')">
                         Nr zlecenia
@@ -182,6 +185,10 @@ if($_SESSION['group'] == 'klient') {
                     <th>
                         <input type="date" v-model="filtry.date_start">
                         <input type="date" v-model="filtry.date_end" v-if="filtry.date_start">
+                    </th>
+
+                    <th v-for="header in headers">
+                        <input type="text" >
                     </th>
                    
                     <th>
@@ -256,6 +263,10 @@ if($_SESSION['group'] == 'klient') {
                         {{elem.usterka_numer}}
                         </td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
+
+                        <td v-for="(header,index) in headers">
+                                {{elem['column'+index]}}
+                        </td>
                       
 
                        
@@ -459,7 +470,7 @@ if($_SESSION['group'] == 'klient') {
                 </template>
                 <!-- DODAWANIE -->
                 <tr id="addformtable" class="addrow">
-                    <td><template v-if="crudmode == 'add' && form.opis_niezgodnosci" > 
+                    <td><template v-if="crudmode == 'add'" > 
                             <button title="zapisz" @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
                             <button title="zapisz jako ukryte" @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group == 'admin'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
 
@@ -468,6 +479,12 @@ if($_SESSION['group'] == 'klient') {
                        
                     </td>
                     <td></td>
+
+                    <td v-for="(header,index) in headers">
+
+                        <input type="text" :placeholder="'column'+index" v-model="form['column'+index]">   
+
+                    </td>
                    
                   
                     <td>
@@ -652,7 +669,7 @@ if($_SESSION['group'] == 'klient') {
     </button>
 
     <div v-if="excelbulkbool" style="margin:10px">
-        <button style="display:block" class="btn btn-danger" v-if="excelinput" @click="loadExcel"><i class="bi bi-floppy"></i> Wczytaj dane</button>
+        <button style="display:block" class="btn btn-danger" v-if="excelinput" @click="loadExcelBulk"><i class="bi bi-floppy"></i> Wczytaj dane</button>
 
         <textarea name="" id="" rows="10" cols="150" v-model="excelinput" placeholder="wklej wiersze z excela"></textarea><br>
      </div>

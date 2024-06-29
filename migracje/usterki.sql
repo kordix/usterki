@@ -43,6 +43,9 @@ ALTER TABLE usterki
 ADD COLUMN `typ_niezgodnosci_serwis` varchar(255) default '';
 
 ALTER TABLE usterki
+ADD COLUMN `column0` varchar(255) default '';
+
+ALTER TABLE usterki
 ADD COLUMN `column1` varchar(255) default '';
 
 ALTER TABLE usterki

@@ -41,7 +41,18 @@ let app = Vue.createApp({
                 opis_niezgodnosci: '',
                 adres: '',
                 status: 'Zgłoszona',
-                termin_zgloszenia: 'Lokatorska'
+                termin_zgloszenia: 'Lokatorska',
+                column0:'',
+                column1: '',
+                column2: '',
+                column3: '',
+                column4: '',
+                column5: '',
+                column6: '',
+                column7: '',
+                column8: '',
+                column9: '',
+                column10: ''
             },
             crudmode: 'add',
             extras: [
@@ -65,7 +76,8 @@ let app = Vue.createApp({
             logdialogbool: false,
             logs: [],
             hiddenColumns: [],
-            excelbulkbool: false
+            excelbulkbool: false,
+            headers: ['Nr budynku administracyjny', 'Nr budynku budowlany', 'Nr lokalu', 'Piętro', 'Data stwierdzenia usterki/data odbioru lokalu','Opis nieprawidłowości wykonania (usterki)']
 
         }
     },
@@ -487,14 +499,10 @@ let app = Vue.createApp({
             for (let i = 0; i < processedarray.length; i++) {
                 let processed = processedarray[i].split('\t');
 
-                this.form.lokal = processed[0];
-                this.form.adres_admin = processed[1];
-                this.form.nr_admin = processed[2];
-                this.form.kontakt_klient = processed[3];
-                this.form.data_klient = processed[4];
-                this.form.typ_niezgodnosci = processed[5];
-                this.form.opis_niezgodnosci = processed[6];
-                this.form.uwagi_inwestora = processed[7];
+                for(let i = 0;i < this.headers.length;i++){
+                    this.form['column'+i] = processed[i];
+                }
+
                 this.form.nr_zlecenia = processed[8];
                 this.form.nr_pozycji = processed[9];
 
