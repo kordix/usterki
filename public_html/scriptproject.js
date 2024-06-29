@@ -699,6 +699,17 @@ let app = Vue.createApp({
                 filtered = filtered.filter((el) => el.status?.toLowerCase().indexOf(self.filtry.status.toLowerCase()) > -1)
             }
 
+
+            if (this.filtry.nr_zlecenia) {
+                console.log('DUPA');
+                filtered = filtered.filter((el) => el.nr_zlecenia?.toLowerCase().indexOf(self.filtry.nr_zlecenia.toLowerCase()) > -1)
+            }
+
+            if (this.filtry.nr_pozycji) {
+                console.log('DUPA');
+                filtered = filtered.filter((el) => el.nr_pozycji?.toLowerCase().indexOf(self.filtry.nr_pozycji.toLowerCase()) > -1)
+            }
+
             if (this.filtry.date_start && this.filtry.date_end) {
                 const startDate = new Date(this.filtry.date_start);
                 const endDate = new Date(this.filtry.date_end);

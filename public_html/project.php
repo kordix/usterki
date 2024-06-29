@@ -99,9 +99,9 @@ if($_SESSION['group'] == 'klient') {
             <table id="usterkitable">
                 <!-- NAGŁÓWEK -->
                 <tr>
-                    <td colspan="13" style="background:lightgreen;text-align:center;" id="strefa1td">
+                    <td colspan="5" style="background:lightgreen;text-align:center;" id="strefa1td">
                         <template style="display:flex;justify-content:space-between">
-                            <span><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}  
+                            <span :class="{'bold':filtered.length < usterki.length}"><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}  
                             
                                 <span v-if="hiddenColumns.length > 0 " style="background:white">
                                 <span ><b> Schowane kolumny:</b></span>
@@ -123,25 +123,7 @@ if($_SESSION['group'] == 'klient') {
                         Data zgłoszenia
                     </th>
                   
-                    <th style="width:20px;cursor:pointer" @click="sortuj('lokal')">
-                        Nr budowlany
-                    </th>
-                    <th @click="sortuj('adres_admin')">
-                        Adres administracyjny
-                    </th>
-                    <th @click="sortuj('nr_admin')">Nr admin.</th>
-                    <th id="thkontakt_klient" @click="sortuj('kontakt_klient')" style="position:relative">Kontakt do klienta <div class="hover-element"><i class="bi bi-eye-slash" style="font-size:20px" @click.stop="hideColumn('kontakt_klient')"></i></div></th>
-                    <th id="thdata_klient" @click="sortuj('data_klient')" >Data zgłoszenia przez klienta <div class="hover-element"><i class="bi bi-eye-slash" style="font-size:20px" @click.stop="hideColumn('data_klient')"></i></div></th>
-                    <th @click="sortuj('typ_niezgodnosci')" title="Zgłoszony typ usterki">
-                        <span>Zgł. typ usterki</span>
-                    </th>
-                    <th @click="sortuj('opis_niezgodnosci')">
-                        <b>Zgłoszony opis usterki</b>
-                    </th>
-                    <th @click="sortuj('uwagi_inwestora')">
-                        <b>Uwagi inwestora</b>
-                    </th>
-                 
+                    
                     <th @click="sortuj('nr_zlecenia')">
                         Nr zlecenia
                     </th>
@@ -201,39 +183,7 @@ if($_SESSION['group'] == 'klient') {
                         <input type="date" v-model="filtry.date_start">
                         <input type="date" v-model="filtry.date_end" v-if="filtry.date_start">
                     </th>
-                    <th>
-                        <input type="text" v-model="filtry.lokal" style="width:90%">
-                    </th>
-                    <th>
-                        <input type="text" v-model="filtry.adres_admin" style="width:90%">
-                    </th>
-                    <th>
-                        <input type="text" v-model="filtry.nr_admin" style="width:90%">
-                    </th>
-                    <th>
-                        <input type="text" v-model="filtry.kontakt_klient" style="width:90%">
-                    </th>
-                    <th>
-                        <!-- <input type="date" v-model="filtry.data_klient" style="width:90%"> -->
-                    </th>
-                    <th>
-                        <select name="" id="" v-model="filtry.typ_niezgodnosci" class="typusterkiselect">
-                            <option value="">-</option>
-                            <option value="Wada szyby">Wada szyby</option>
-                            <option value="Uszkodzone / Wada powierzchni">Uszkodzone</option>
-                            <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
-                            <option value="Brak / niekompletność">Brak / niekompletność</option>
-                            <option value="Wada funkcjonowania">Wada funkcjonowania</option>
-                            <option value="Wada wymiarowa">Wada wymiarowa</option>
-                        </select>
-                    </th>
-                    <th>
-                        <input type="text" v-model="filtry.opis_niezgodnosci" style="width:95%">
-                    </th>
-                       <th >
-                        <input type="text" v-model="filtry.uwagi_inwestora" style="width:95%">
-                    </th>
-                  
+                   
                     <th>
                         <input type="text" v-model="filtry.nr_zlecenia" style="width:95%">
                     </th>
@@ -306,52 +256,10 @@ if($_SESSION['group'] == 'klient') {
                         {{elem.usterka_numer}}
                         </td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'lokal')" title="Nr budowlany">
-                            <span v-if="!elem.editable"> {{elem.lokal}}</span>
-                            <input @keyup.enter="elem.editable = false" :id="elem.id+'lokal'" v-else type="text" v-model="elem.lokal" @change="updateAuto(elem,'lokal')" style="width:90%" @blur.stop="elem.editable = false">
-                        </td>
+                      
 
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'adres_admin')" title="Adres administracyjny">
-                            <span v-if="!elem.editable"> {{elem.adres_admin}}</span>
-                            <input @keyup.enter="elem.editable = false" :id="elem.id+'adres_admin'"  v-else type="text" v-model="elem.adres_admin" @change="updateAuto(elem,'adres_admin')" @blur.stop="elem.editable = false">
-                        </td>
-
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'nr_admin')" title="Numer administracyjny">
-                            <span v-if="!elem.editable"> {{elem.nr_admin}}</span>
-                            <input :id="elem.id+'nr_admin'"  v-else type="text" v-model="elem.nr_admin" @change="updateAuto(elem,'nr_admin')" @blur.stop="elem.editable = false">
-                        </td>
-
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'kontakt_klient')" title="Kontakt do klienta">
-                            <span v-if="!elem.editable"> {{elem.kontakt_klient}}</span>
-                            <input :id="elem.id+'kontakt_klient'"  v-else type="text" v-model="elem.kontakt_klient" @change="updateAuto(elem,'kontakt_klient')" @blur.stop="elem.editable = false">
-                        </td>
-
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'data_klient')" title="Data zgłoszenia przez klienta">
-                            <span v-if="!elem.editable"> {{elem.data_klient}}</span>
-                            <input v-else :id="elem.id+'data_klient'" type="date" v-model="elem.data_klient" @blur.stop="updateAuto(elem,'data_klient')">
-                        </td>
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'typ_niezgodnosci')" title="Typ usterki">
-                            <span v-if="!elem.editable">{{elem.typ_niezgodnosci}}</span>
-                            <select name="" :id="elem.id+'typ_niezgodnosci'" v-model="elem.typ_niezgodnosci" @change="updateAuto(elem,'typ_niezgodnosci')" style="width:95%" v-if="elem.editable" @blur.stop="elem.editable = false">
-                            <option value="">-</option>
-                                <option value="Wada szyby">Wada szyby</option>
-                                <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
-                                <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
-                                <option value="Brak / niekompletność">Brak / niekompletność</option>
-                                <option value="Wada funkcjonowania">Wada funkcjonowania</option>
-                                <option value="Wada wymiarowa">Wada wymiarowa</option>
-                            </select>
-
-                        </td>
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'opis_niezgodnosci')" title="Opis usterki" class="disabledcursor">
-                            <span v-if="!elem.editable">  {{elem.opis_niezgodnosci}}</span>
-                            <textarea :id="elem.id+'opis_niezgodnosci'" v-else v-model="elem.opis_niezgodnosci" @change="updateAuto(elem,'opis_niezgodnosci')" @blur.stop="elem.editable = false" style="width:95%"></textarea>
-                        </td>
-
-                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'uwagi_inwestora')" title="Uwagi inwestora">
-                            <span v-if="!elem.editable"> {{elem.uwagi_inwestora}}</span>
-                            <input :id="elem.id+'uwagi_inwestora'" v-else  v-model="elem.uwagi_inwestora" @change="updateAuto(elem,'uwagi_inwestora')" @blur.stop="elem.editable = false">
-                        </td>
+                       
+                       
                        
 
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" @click="handleChange(elem,'nr_zlecenia')" title="Numer zlecenia">
@@ -560,38 +468,7 @@ if($_SESSION['group'] == 'klient') {
                        
                     </td>
                     <td></td>
-                    <td>
-                        <input  type="text" v-model="form.lokal" style="width:90%">
-                    </td>
-                    <td>
-                        <input  type="text" v-model="form.adres_admin">
-                    </td>
-                    <td>
-                        <input  type="text" v-model="form.nr_admin" style="width:60px">
-                    </td>
-                    <td>
-                        <textarea  type="text" v-model="form.kontakt_klient" style="width:150px"></textarea>
-                    </td>
-                    <td>
-                        <input  type="date" v-model="form.data_klient">
-                    </td>
-                    <td>
-                        <select name="" id="" v-model="form.typ_niezgodnosci" class="typusterkiselect">
-                           <option value="">-</option>
-                            <option value="Wada szyby">Wada szyby</option>
-                            <option value="Uszkodzone / Wada powierzchni">Uszkodzone / Wada powierzchni</option>
-                            <option value="Niezgodność asortymentowa">Niezgodność Asortymentowa</option>
-                            <option value="Brak / niekompletność">Brak / niekompletność</option>
-                            <option value="Wada funkcjonowania">Wada funkcjonowania</option>
-                            <option value="Wada wymiarowa">Wada wymiarowa</option>
-                        </select>
-                    </td>
-                    <td>
-                        <textarea v-model="form.opis_niezgodnosci" style="width:250px"></textarea>
-                    </td>
-                    <td>
-                        <textarea v-model="form.uwagi_inwestora" style="width:150px"></textarea>
-                    </td>
+                   
                   
                     <td>
                         <input  v-model="form.nr_zlecenia" style="width:100px">
