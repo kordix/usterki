@@ -10,7 +10,7 @@ let app = Vue.createApp({
             sortkey: '',
             filtry: {
                 id: null,
-                opis_niezgodnosci: null,
+                opis_niezgodnosci: '',
                 kontakt_klient: null,
                 date_start: null,
                 date_end: null
@@ -42,7 +42,7 @@ let app = Vue.createApp({
                 adres: '',
                 status: 'Zgłoszona',
                 termin_zgloszenia: 'Lokatorska',
-                column0:'',
+                column0: '',
                 column1: '',
                 column2: '',
                 column3: '',
@@ -77,7 +77,11 @@ let app = Vue.createApp({
             logs: [],
             hiddenColumns: [],
             excelbulkbool: false,
-            headers: ['Nr budynku administracyjny', 'Nr budynku budowlany', 'Nr lokalu', 'Piętro', 'Data stwierdzenia usterki/data odbioru lokalu','Opis nieprawidłowości wykonania (usterki)']
+            headers: [],
+            scrollY: 0,
+            opisusterkicolumn: '',
+            deleteresponse: ''
+            // headers: ['Nr budynku administracyjny', 'Nr budynku budowlany', 'Nr lokalu', 'Piętro', 'Data stwierdzenia usterki/data odbioru lokalu','Opis nieprawidłowości wykonania (usterki)']
 
         }
     },
@@ -94,12 +98,20 @@ let app = Vue.createApp({
         }
         const self = this;
         const id = document.querySelector('#projectid').innerHTML;
+        await axios.get('api/headers.php?projectid=' + id).then((res) => self.headers = res.data);
         await axios.get('api/project.php?id=' + id).then((res) => self.project = res.data[0]);
         await axios.get('api/usterki.php?id=' + id).then((res) => self.usterki = res.data);
         await axios.get('api/extras.php?id=' + id).then((res) => self.extras = res.data);
         await axios.get('api/getuser.php').then((res) => self.user = res.data);
         await axios.get('api/files.php?projectid=' + id).then((res) => self.files = res.data);
+
         await axios.get('api/logs.php?projectid=' + id).then((res) => self.logs = res.data);
+
+        for (let i = 0; i < this.headers.length; i++) {
+            if (this.headers[i].toLowerCase().indexOf('opis') > -1) {
+                this.opisusterkicolumn = 'column' + i;
+            }
+        }
 
 
         document.onkeydown = function (evt) {
@@ -118,9 +130,12 @@ let app = Vue.createApp({
             }
         }
 
+        document.addEventListener('scroll', function () {
+            self.scrollY = window.scrollY;
+        });
+
         this.filtry.date_end = new Date().toISOString().split('T')[0];
 
-        console.log('COŚ TAM REAGUJE');
 
 
 
@@ -193,14 +208,12 @@ let app = Vue.createApp({
         shouldAddSeparator(index) {
             // return false;
             // console.log('dupa');
-            if (this.sortkey == 'lokal') {
+            if (this.sortkey) {
                 if (index === 0) return false; // Nie dodaj separatora przed pierwszym elementem
-                if (this.usterki[index].lokal !== this.usterki[index - 1].lokal) {
+                if (this.usterki[index][this.sortkey] !== this.usterki[index - 1][this.sortkey]) {
                     console.log('DUPA');
                 }
-                return this.usterki[index].lokal !== this.usterki[index - 1].lokal;
-            } else {
-                return false;
+                return this.usterki[index][this.sortkey] !== this.usterki[index - 1][this.sortkey];
             }
         },
 
@@ -259,9 +272,6 @@ let app = Vue.createApp({
             this.crudmode
             this.form = this.usterki.find((el) => el.id == id);
             this.formbool = true;
-        },
-        deleteusterka() {
-            axios.get('api/usterkadelete.php?id=' + this.form.id).then((res) => location.reload())
         },
         hideUsterka() {
             axios.get('api/usterkahide.php?id=' + this.form.id).then((res) => location.reload())
@@ -389,8 +399,11 @@ let app = Vue.createApp({
 
         },
         async usun(id) {
-            await axios.get('api/usterkadelete.php?id=' + id);
-            location.reload();
+            let self = this;
+            await axios.get('api/usterkadelete.php?id=' + id).then((res) => self.deleteresponse = res.data.trim());
+            if (!this.deleteresponse) {
+                location.reload();
+            }
         },
         async hide(id, reveal) {
             const projectid = document.querySelector('#projectid').innerHTML;
@@ -466,7 +479,7 @@ let app = Vue.createApp({
             let lokalindex = naglowki.findIndex((el) => el.indexOf('lokal') >= 0);
             let adminindex = naglowki.findIndex((el) => el.indexOf('admin') >= 0);
 
-            
+
 
 
 
@@ -499,8 +512,8 @@ let app = Vue.createApp({
             for (let i = 0; i < processedarray.length; i++) {
                 let processed = processedarray[i].split('\t');
 
-                for(let i = 0;i < this.headers.length;i++){
-                    this.form['column'+i] = processed[i];
+                for (let i = 0; i < this.headers.length; i++) {
+                    this.form['column' + i] = processed[i];
                 }
 
                 this.form.nr_zlecenia = processed[8];
@@ -648,6 +661,17 @@ let app = Vue.createApp({
                     })
                 })
             }
+
+            for (let i = 0; i < this.headers.length; i++) {
+                if (this.filtry['column' + i]) {
+                    console.log(i);
+                    console.log('WIDZI GÓWNO');
+                    filtered = filtered.filter((el) =>
+                        el['column' + i].toLowerCase().indexOf(this.filtry['column' + i].toLowerCase()) > -1
+                    );
+                }
+            }
+
 
 
             if (this.filtry.opis_niezgodnosci) {

@@ -140,8 +140,15 @@ th{
  }
 
  .filtry > th {
+    transition: .5s;
     background:#eee;
     height:20px;
+ }
+
+ .filtrysticky > th {
+    transition: .5s;
+    background:lightsalmon !important;
+    z-index:1000;
  }
 
  .addrow > td {
@@ -228,6 +235,7 @@ th{
 
   #rowheader > th{
     position:relative;
+    background:white;
   }
 
   .adminfile {
@@ -236,4 +244,8 @@ th{
 
   .bold{
     font-weight:bold;
+  }
+
+  .wide {
+    width:350px;
   }

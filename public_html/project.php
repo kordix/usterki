@@ -57,7 +57,7 @@ if($_SESSION['group'] == 'klient') {
     <link rel="stylesheet" href="/css/lightbox.css">
 
 
-    <meta name="robots" content="noindex">
+    <meta name="robots" content="noindex,nofollow" />
 
     <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> -->
@@ -98,7 +98,7 @@ if($_SESSION['group'] == 'klient') {
             <br>
             <table id="usterkitable">
                 <!-- NAGŁÓWEK -->
-                <tr>
+                <tr style="position:sticky;top: -2px;">
                     <td :colspan="5+headers.length" style="background:lightgreen;text-align:center;" id="strefa1td">
                         <template style="display:flex;justify-content:space-between">
                             <span :class="{'bold':filtered.length < usterki.length}"><i class="bi bi-funnel"></i> Wyfiltrowano: {{filtered.length}} / {{usterki.length}}  
@@ -117,13 +117,13 @@ if($_SESSION['group'] == 'klient') {
                         STREFA SERWISU
                     </td>
                 </tr>
-                <tr style="cursor:pointer" id="rowheader">
+                <tr style="cursor:pointer; position:sticky;top:20px;" id="rowheader">
                     <th @click="sortuj('id')">id</td>
                     <th style="width:140px" @click="sortuj('created_at')">
                         Data zgłoszenia
                     </th>
                   
-                    <th v-for="header in headers">
+                    <th v-for="(header,index) in headers" @click="sortuj('column'+index)">
                         {{header}}
                     </th>  
                     
@@ -178,7 +178,7 @@ if($_SESSION['group'] == 'klient') {
 
                 </tr>
                 <!-- FILTRY -->
-                <tr class="filtry" v-if="usterki.length > 0">
+                <tr class="filtry" :class="{'filtrysticky': scrollY > 50}" style="transition:all 5s;position:sticky;top:80px;">
                     <th>
                         <input type="text" v-model="filtry.id" style="width:20px">
                     </th>
@@ -187,8 +187,8 @@ if($_SESSION['group'] == 'klient') {
                         <input type="date" v-model="filtry.date_end" v-if="filtry.date_start">
                     </th>
 
-                    <th v-for="header in headers">
-                        <input type="text" >
+                    <th v-for="(header,index) in headers">
+                        <input type="text" v-model="filtry['column'+index]">
                     </th>
                    
                     <th>
@@ -264,7 +264,7 @@ if($_SESSION['group'] == 'klient') {
                         </td>
                         <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length"> <span style="width:100px;display:block">  {{elem.created_at}}</span></td>
 
-                        <td v-for="(header,index) in headers">
+                        <td :rowspan="1 + extras.filter(el=>el.usterka_id == elem.id).length" v-for="(header,index) in headers" :title="header">
                                 {{elem['column'+index]}}
                         </td>
                       
@@ -317,7 +317,7 @@ if($_SESSION['group'] == 'klient') {
 
                         </td>
 
-                        <td @click="handleChange(elem,'typ_niezgodnosci_serwis')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative" title="komentarz serwisu">
+                        <td @click="handleChange(elem,'typ_niezgodnosci_serwis')" :class="{disabledcursor:user.group == 'klient'}"  title="typ usterki">
                              <span v-if="!elem.typ_niezgodnosci_serwis" style="opacity:0.8">{{elem.typ_niezgodnosci}}</span>
                             <span v-if="!elem.editable && elem.typ_niezgodnosci_serwis"><i class="bi bi-exclamation-octagon" style="color:red"></i> {{elem.typ_niezgodnosci_serwis}}</span>
 
@@ -334,14 +334,14 @@ if($_SESSION['group'] == 'klient') {
 
                         </td>
 
-                       <td @click="handleChange(elem,'opis_niezgodnosci_serwis')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative" title="komentarz serwisu">
-                           <span v-if="!elem.opis_niezgodnosci_serwis" style="opacity:0.8">{{elem.opis_niezgodnosci}}</span>
+                       <td @click="handleChange(elem,'opis_niezgodnosci_serwis')" :class="{disabledcursor:user.group == 'klient'}"  title="opis niezgodności">
+                           <span v-if="!elem.opis_niezgodnosci_serwis" style="color:#555">{{elem[opisusterkicolumn]}}</span>
                             <span v-if="!elem.editable && elem.opis_niezgodnosci_serwis"><i class="bi bi-exclamation-octagon" style="color:red"></i> {{elem.opis_niezgodnosci_serwis}}</span>
                             <textarea :id="elem.id+'opis_niezgodnosci_serwis'" v-if="elem.editable"  v-model="elem.opis_niezgodnosci_serwis" :disabled="user.group == 'klient'" @change="updateAuto(elem,'opis_niezgodnosci_serwis')" style="width:95%" @blur="elem.editable = false"></textarea>
                         </td>
 
-                        <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" style="position:relative" title="komentarz serwisu">
-                            <span v-if="!elem.editable">  <b v-if="extras.filter(el=>el.usterka_id == elem.id).length"> {{elem.usterka_numer}}.1</b> {{elem.komentarz_serwisu}}</span>
+                        <td @click="handleChange(elem,'komentarz_serwisu')" :class="{disabledcursor:user.group == 'klient'}" title="komentarz serwisu">
+                                <span v-if="!elem.editable">  <b v-if="extras.filter(el=>el.usterka_id == elem.id).length"> {{elem.usterka_numer}}.1</b> {{elem.komentarz_serwisu}}</span>
                             <textarea :id="elem.id+'komentarz_serwisu'" v-else  v-model="elem.komentarz_serwisu" :disabled="user.group == 'klient'" @change="updateAuto(elem,'komentarz_serwisu')" style="width:95%" @blur="elem.editable = false"></textarea>
                         </td>
                         <td @click="handleChange(elem,'nr_oferty')" :class="{disabledcursor:user.group == 'klient'}" title="Nr oferty">
@@ -377,12 +377,12 @@ if($_SESSION['group'] == 'klient') {
                         <td>
                             {{elem.akcja}}
                         </td>
-                        <td style="width:150px">
+                        <td>
                             <div style="display:flex;flex-wrap:no-wrap">
                                 <button class="btn-sm btn-danger" @click="deletedialogbool=true;activeusterka=elem.id" style="display:inline-block;margin-right:5px"><i class="bi bi-trash"></i></button>
-                                <button @click="addExtra(elem.id)" style="display:inline-block;margin-right:5px" :disabled="user.group == 'klient'">+</button>
+                                <button @click="addExtra(elem.id)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient'">+</button>
                                 <button class="btn-sm btn-warning" @click="revealdialogbool = true;activeusterka = elem.id" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient' && elem.hidden"><i class="bi bi-eye"></i></button>
-                                <button @click="logdialogbool = true;activeusterka = elem.id" class="btn-sm btn-secondary" style="display:inline-block;margin-right:5px" :disabled="user.group == 'klient'"><i class="bi bi-newspaper"></i></button>
+                                <button @click="logdialogbool = true;activeusterka = elem.id" class="btn-sm btn-secondary" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient'"><i class="bi bi-newspaper"></i></button>
                                 
 
                                 
@@ -472,7 +472,7 @@ if($_SESSION['group'] == 'klient') {
                 <tr id="addformtable" class="addrow">
                     <td><template v-if="crudmode == 'add'" > 
                             <button title="zapisz" @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
-                            <button title="zapisz jako ukryte" @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group == 'admin'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
+                            <button title="zapisz jako ukryte" @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group != 'klient'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
 
                         </template>
                             <span v-else>+</span>
@@ -482,7 +482,7 @@ if($_SESSION['group'] == 'klient') {
 
                     <td v-for="(header,index) in headers">
 
-                        <input type="text" :placeholder="'column'+index" v-model="form['column'+index]">   
+                        <input type="text" v-model="form['column'+index]" :class="{'wide': 'column'+index == opisusterkicolumn}">   
 
                     </td>
                    
@@ -584,9 +584,9 @@ if($_SESSION['group'] == 'klient') {
            
             <p> Czy na pewno chcesz usunąć usterkę?</p>   
             <button class="btn-sm btn-danger" @click="usun(activeusterka)" style="display:inline-block;margin-right:5px">Usuń <i class="bi bi-trash"></i></button>
-
+            <p><b>{{deleteresponse}}</b></p>
             <br><br>
-            <button @click="deletedialogbool = !deletedialogbool" class="btn btn-danger">x Zamknij</button>
+            <button @click="deletedialogbool = !deletedialogbool;deleteresponse = ''" class="btn btn-danger">x Zamknij</button>
         </div>
     </div>
 

@@ -18,18 +18,25 @@ require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 $dane = json_decode(file_get_contents('php://input'));
 
 $login = $dane->login;
-$password = password_hash(strtolower($dane->password) , PASSWORD_DEFAULT);
+
+$group = $dane->group;
+
+// $password = password_hash(strtolower($dane->password) , PASSWORD_DEFAULT);
 
 
 
-$query = "INSERT INTO users (login,password,`group`) VALUES (?,?,'klient');";
+$query = "INSERT INTO users (login,`group`) VALUES (?,?);";
 
 
 
 
 
 $sth = $dbh->prepare($query);
-$sth->execute([$login,$password]);
+if($sth->execute([$login,$group])){
+    echo 'ZAREJESTROWANO UŻYTKOWNIKA';
+} else {
+    echo 'COŚ POSZŁO NIE TAK';
+}
 
 ?>
 

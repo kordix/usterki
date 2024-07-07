@@ -15,7 +15,10 @@ Vue.createApp({
             },
             rights:[],
             users:[],
-            crudmode:'add'
+            crudmode:'add',
+            headers:[],
+            headeradd:'',
+
         }
     },
     async mounted() {
@@ -24,6 +27,8 @@ Vue.createApp({
         await axios.get('/api/getuser.php').then((res) => self.user = res.data);
         await axios.get('/api/rights.php').then((res) => self.rights = res.data);
         await axios.get('/api/users.php').then((res) => self.users = res.data);
+        await axios.get('/api/headersall.php').then((res) => self.headers = res.data);
+
 
 
 
@@ -56,6 +61,19 @@ Vue.createApp({
             this.crudmode = 'edit';
 
             this.form = elem;
+        },
+        async addheader(){
+            let self = this;
+            await axios.post('api/headeradd.php', { header: this.headeradd, project_id:this.activeproject});
+            this.headeradd = '';
+
+            await axios.get('/api/headersall.php').then((res) => self.headers = res.data);
+
+        },
+        async setTemplateHeaders(){
+            let self = this;
+            await axios.post('api/headerstemplate.php', { project_id: this.activeproject });
+            await axios.get('/api/headersall.php').then((res) => self.headers = res.data);
 
         }
 

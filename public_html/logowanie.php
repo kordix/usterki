@@ -56,14 +56,14 @@ let app = new Vue({
         zaloguj(){
             let self = this;
             axios.post('/api/zaloguj.php',{login:this.login,password:this.password.toLowerCase()}).then((res)=>{
-                console.log(res.data.length);
+                self.error = res.data;
 
               
 
                 if(res.data.length == 12 || res.data.length == 11){
                     location.reload();
                 }else{
-                    self.error = 'Zły login lub hasło';
+                    // self.error = 'Zły login lub hasło';
                 }
             })
         }

@@ -14,8 +14,8 @@ require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 $id = $_SESSION['id'];
 
-$query = "select * from projects";
-if($_SESSION['group'] == 'klient') {
+$query = "select p.*, (SELECT count(*) from usterki where usterki.project_id = p.id) as ilerazem, (SELECT count(*) from usterki where usterki.project_id = p.id and status = 'Zgłoszona' and hidden = '') as ile  from projects p";
+if($_SESSION['group'] != 'admin') {
     $query = "select distinct p.* from projects p
     join rights r on p.id = r.project_id
     where r.user_id = $id
