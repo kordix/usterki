@@ -54,6 +54,10 @@ let app = new Vue({
     },
     methods:{
         zaloguj(){
+            if(!this.password){
+                this.error = 'PROSZĘ WPISAĆ HASŁO. DLA NOWEGO KONTA PRZY PIERWSZYM LOGOWANIU USTAWI SIĘ WPISANE HASŁO';
+                return
+            }
             let self = this;
             axios.post('/api/zaloguj.php',{login:this.login,password:this.password.toLowerCase()}).then((res)=>{
                 self.error = res.data;
