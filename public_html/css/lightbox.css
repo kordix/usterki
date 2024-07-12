@@ -7,7 +7,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     opacity: 0;
     display: grid;
-    place-items: center;
+    /* place-items: center; */
     transition: opacity 0.5s ease;
     overflow: scroll;
 }
