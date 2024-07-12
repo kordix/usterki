@@ -172,13 +172,13 @@ if($_SESSION['group'] == 'klient') {
                     </th>
 
 
-                    <th>
+                    <th data-hide-copy>
                         akcje
                     </th>
 
                 </tr>
                 <!-- FILTRY -->
-                <tr class="filtry" :class="{'filtrysticky': scrollY > 50}" style="transition:all 5s;position:sticky;top:80px;">
+                <tr class="filtry" :class="{'filtrysticky': scrollY > 50}" style="transition:all 5s;position:sticky;top:80px;" data-hide-copy>
                     <th>
                         <input type="text" v-model="filtry.id" style="width:20px">
                     </th>
@@ -377,7 +377,7 @@ if($_SESSION['group'] == 'klient') {
                         <td>
                             {{elem.akcja}}
                         </td>
-                        <td>
+                        <td data-hide-copy>
                             <div style="display:flex;flex-wrap:no-wrap">
                                 <button class="btn-sm btn-danger" @click="deletedialogbool=true;activeusterka=elem.id" style="display:inline-block;margin-right:5px"><i class="bi bi-trash"></i></button>
                                 <button @click="addExtra(elem.id)" style="display:inline-block;margin-right:5px" v-if="user.group != 'klient'">+</button>
@@ -460,7 +460,7 @@ if($_SESSION['group'] == 'klient') {
                         <td>
                             
                         </td>
-                        <td>
+                        <td data-hide-copy>
                             
                         <button class="btn-sm btn-danger" @click="usunExtra(ext.id)" style="display:inline-block;margin-right:5px">Usuń</button>
                             
@@ -469,7 +469,7 @@ if($_SESSION['group'] == 'klient') {
                     </tr>
                 </template>
                 <!-- DODAWANIE -->
-                <tr id="addformtable" class="addrow">
+                <tr id="addformtable" class="addrow" data-hide-copy>
                     <td><template v-if="crudmode == 'add'" > 
                             <button title="zapisz" @click="save(false)" class="btn btn-primary" style="padding:2px" ><i class="bi bi-floppy"></i></button>
                             <button title="zapisz jako ukryte" @click="save(true)" class="btn btn-primary" style="padding:2px;margin-top:2px" v-if="user.group != 'klient'"><i class="bi bi-floppy"></i><i class="bi bi-eye-slash"></i></button>
@@ -547,7 +547,7 @@ if($_SESSION['group'] == 'klient') {
                     </td>
 
                     <td style="background:white" colspan="2" v-if="user.group == 'admin'">
-                        <button class="btn btn-primary" @click="exportToExcel"><i class="bi bi-download"></i> <i class="bi bi-file-earmark-spreadsheet"></i></button>
+                        <button class="btn btn-primary" @click="copy"><i class="bi bi-download"></i> <i class="bi bi-file-earmark-spreadsheet"></i></button>
                        
                     </td>
                   

@@ -233,6 +233,10 @@ th{
     display:none;
   }
 
+  .hide2 {
+      display: none;
+  }
+
   #rowheader > th{
     position:relative;
     background:white;

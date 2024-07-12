@@ -144,6 +144,38 @@ let app = Vue.createApp({
 
     },
     methods: {
+        copy() {
+            const elementsToHide = document.querySelectorAll('[data-hide-copy]');
+            elementsToHide.forEach(element => {
+                element.classList.add('hide2');
+            });
+            this.selectElementContents(document.getElementById("usterkitable"));
+
+            
+
+            
+        },
+        selectElementContents(el) {
+            var body = document.body,
+                range,
+                sel;
+            if (document.createRange && window.getSelection) {
+                range = document.createRange();
+                sel = window.getSelection();
+                sel.removeAllRanges();
+                try {
+                    range.selectNodeContents(el);
+                    sel.addRange(range);
+                } catch (e) {
+                    range.selectNode(el);
+                    sel.addRange(range);
+                }
+            } else if (body.createTextRange) {
+                range = body.createTextRange();
+                range.moveToElementText(el);
+                range.select();
+            }
+        },  
         hideColumn(column, reveal, nosave) {
             if (!reveal) {
                 document.getElementById('th' + column).classList.add('hide-column');

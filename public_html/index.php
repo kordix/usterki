@@ -97,7 +97,7 @@ if(!isset($_SESSION['zalogowany'])) {
                             <td>{{elem.created_at}}</td>
                             <td><b v-if="elem.ile > 0"> {{elem.ile}} </b><span v-else>{{elem.ile}}</span> </td>
                        
-                            <td><a :href="'/project.php?id='+elem.id"> <button class="btn btn-primary" @click="preview(elem.id)"><i class="bi bi-box-arrow-in-left"></i> Wejdź</button></a></td>
+                            <td><a :href="'/project.php?id='+elem.id"> <button class="btn btn-primary" @click.stop="preview(elem.id)"><i class="bi bi-box-arrow-in-left"></i> Wejdź</button></a></td>
                             <td v-if="user.group =='admin'">
                                 <button class="btn btn-sm btn-warning" @click="edit(elem)"> <i class="bi bi-pen"></i></button>
                             </td>
