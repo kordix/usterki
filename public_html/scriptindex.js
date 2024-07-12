@@ -18,6 +18,7 @@ Vue.createApp({
             crudmode:'add',
             headers:[],
             headeradd:'',
+            activeright:{}
 
         }
     },
@@ -52,11 +53,12 @@ Vue.createApp({
             
         },
         addright(){
-            axios.get('api/rightadd.php?userid='+this.useradd+'&projectid='+this.activeproject).then((res)=>{
+            axios.get('/api/rightadd.php?userid='+this.useradd+'&projectid='+this.activeproject).then((res)=>{
                 location.reload()
             })
         },
         edit(elem){
+            this.activeright = {};
             this.formbool = true;
             this.crudmode = 'edit';
 
@@ -64,7 +66,7 @@ Vue.createApp({
         },
         async addheader(){
             let self = this;
-            await axios.post('api/headeradd.php', { header: this.headeradd, project_id:this.activeproject});
+            await axios.post('/api/headeradd.php', { header: this.headeradd, project_id:this.activeproject});
             this.headeradd = '';
 
             await axios.get('/api/headersall.php').then((res) => self.headers = res.data);
@@ -72,9 +74,12 @@ Vue.createApp({
         },
         async setTemplateHeaders(){
             let self = this;
-            await axios.post('api/headerstemplate.php', { project_id: this.activeproject });
+            await axios.post('/api/headerstemplate.php', { project_id: this.activeproject });
             await axios.get('/api/headersall.php').then((res) => self.headers = res.data);
 
+        },
+        async removeright(id){
+            await axios.get('/api/rightdelete.php?id='+id).then((res)=>location.reload())
         }
 
     },

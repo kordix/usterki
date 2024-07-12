@@ -15,20 +15,13 @@ if($_SESSION['group'] != 'admin') {
 
 
 
-
 require($_SERVER['DOCUMENT_ROOT'] . '/db.php');
 
 
 $id = $_GET['id'];
 
-$query = "delete from projects where id = ?";
+$query = "delete from rights where id = ?";
 
-echo $query;
 $sth = $dbh->prepare($query);
 $sth->execute([$id]);
-
-$query = "delete from usterki where project_id = ?";
-$sth = $dbh->prepare($query);
-$sth->execute([$id]);
-
 

@@ -4,6 +4,14 @@
     background: yellow
 }
 
+.highlighthover:hover {
+    color:red;
+}
+
+.activeright {
+    color:red
+}
+
 td {
     padding: 4px;
 }

@@ -107,8 +107,8 @@ if(!isset($_SESSION['zalogowany'])) {
                     <br><br>
                     <div v-if="activeproject">
                         <div>
-                            <p>Użytkownicy: <span v-for="el in rights.filter((el)=>el.project_id == activeproject)"><b> {{el.login}} </b> &nbsp;</span>   </p>
-                             
+                            <p>Użytkownicy: <span :class="{'activeright': el.id == activeright.id }" class="highlighthover" @click="activeright = el" style="cursor:pointer" v-for="el in rights.filter((el)=>el.project_id == activeproject)"><b> {{el.login}} </b> &nbsp;</span>   </p>
+                            <p v-if="activeright?.id">Usunąć użytkownika {{activeright.login}} z projektu? <button @click="removeright(activeright.id)" class="btn btn-danger"><i class="bi bi-trash"></i> Usuń</button> </p>
                             <p style="display:inline-block">Dodaj użytkownika: &nbsp;</p>
                             <select name="" id="" v-model="useradd" style="display:inline-block">
                                 <option value=""></option>
